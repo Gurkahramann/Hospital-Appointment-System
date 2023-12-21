@@ -1,0 +1,47 @@
+@model IEnumerable<ASPWebProgramming.Data.Hasta>
+
+    @{
+        ViewData["Title"] = "Hastalar Listesi";
+    }
+    
+    <h2>Hastalar Listesi</h2>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>TC Kimlik No</th>
+                <th>Ad</th>
+                <th>Soyad</th>
+                <th>Telefon</th>
+                <th>Eposta</th>
+
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var hasta in Model)
+        {
+            <tr>
+                <td>@hasta.HastaTc</td>
+                <td>@hasta.HastaAd</td>
+                <td>@hasta.HastaSoyad</td>
+                <td>@hasta.HastaTel</td>
+                <td>@hasta.HastaEposta</td>
+                <td>
+                    <a asp-controller="Hasta" asp-action="Edit" asp-route-id="@hasta.HastaId" class="btn btn-primary">Edit</a>
+                    <a class="btn btn-danger" href="javascript:void(0)" onclick="confirmDelete('@hasta.HastaId')">Delete</a>
+                </td>
+                <!-- Diğer veriler -->
+            </tr>
+        }
+        </tbody>
+    </table>
+    @section Scripts {
+        <script>
+            function confirmDelete(id) {
+                if(confirm("Bu hastayı silmek istediğinize emin misiniz?")) {
+                    window.location.href = '/Hasta/Delete/' + id;
+                }
+            }
+        </script>
+    }
+    

@@ -1,0 +1,57 @@
+@model ASPWebProgramming.Data.Hasta
+
+@{
+    ViewData["Title"] = "Hasta Düzenle";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="HastaId" />
+    
+    <div class="form-group">
+        <label asp-for="HastaTc"></label>
+        <input asp-for="HastaTc" class="form-control" />
+        <span asp-validation-for="HastaTc" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="HastaAd"></label>
+        <input asp-for="HastaAd" class="form-control" />
+        <span asp-validation-for="HastaAd" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="HastaSoyad"></label>
+        <input asp-for="HastaSoyad" class="form-control" />
+        <span asp-validation-for="HastaSoyad" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="HastaTel"></label>
+        <input asp-for="HastaTel" class="form-control" />
+        <span asp-validation-for="HastaTel" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="HastaEposta"></label>
+        <input asp-for="HastaEposta" class="form-control" />
+        <span asp-validation-for="HastaEposta" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="HastaCinsiyet"></label>
+        <select asp-for="HastaCinsiyet" class="form-control">
+            <option value="">Cinsiyet Seçiniz</option>
+            <option value="Erkek">Erkek</option>
+            <option value="Kadın">Kadın</option>
+        </select>
+        <span asp-validation-for="HastaCinsiyet" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
