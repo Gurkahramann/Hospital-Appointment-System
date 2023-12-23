@@ -23,5 +23,15 @@ namespace AspWebProgram.Models
 
         [Required(ErrorMessage = "Cinsiyet gereklidir.")]
         public string HastaCinsiyet { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; } = string.Empty;
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Compare(nameof(Password), ErrorMessage = "Parola eşleşmiyor.")]
+        public string ConfirmPassword { get; set; } = string.Empty;
+
+
     }
 }
