@@ -25,6 +25,11 @@ builder.Services.AddDbContext<DataContext>(options =>{
     var connectionString=config.GetConnectionString("database");
     options.UseSqlServer(connectionString);
 });
+// builder.Services.AddAuthorization(options =>
+// {
+//     options.AddPolicy("CanEditSettings", policy =>
+//         policy.RequireClaim("EditSettings", "true"));
+// });
 builder.Services.Configure<IdentityOptions>(options=>{
     options.Password.RequireDigit=false;
     options.Password.RequireLowercase=false;
@@ -63,7 +68,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

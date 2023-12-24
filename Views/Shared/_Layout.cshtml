@@ -1,26 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using AspWebProgram.Models
-@inject UserManager<AppUser> UserManager
-@inject SignInManager<AppUser> SignInManager
-@inject IHttpContextAccessor HttpContextAccessor
-
-@{
-    AppUser user = null;
-    bool isLoggedIn = false;
-    string username = string.Empty; // Kullanıcı adını saklamak için bir string değişken
-
-    LoadUserAsync().GetAwaiter().GetResult();
-}
-
-@functions {
-    private async Task LoadUserAsync()
-    {
-        user = await UserManager.GetUserAsync(HttpContextAccessor.HttpContext.User);
-        isLoggedIn = SignInManager.IsSignedIn(HttpContextAccessor.HttpContext.User);
-        username = user?.UserName; // null olma ihtimaline karşı null-conditional operator kullanın
-    }
-}
-        <!DOCTYPE html>
+﻿        <!DOCTYPE html>
         <html lang="en">
 
         <head>
@@ -57,25 +35,27 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Home"
                                         asp-action="Privacy">Privacy</a>
                                 </li>
-                                @if (!isLoggedIn)
-                                {
+
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="Account" asp-action="Register">Kayıt Ol</a>
                                 </li>
-                                }
+                                
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-controller="Hasta" asp-action="Index">Hastaları
                                         Listele</a>
                                 </li>
-                                @if (!string.IsNullOrEmpty(username))
+                                @if (User.Identity?.IsAuthenticated == true)
                                 {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" href="#">Hoşgeldiniz: @username</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account"
-                                        asp-action="Logout">Oturumu Kapat</a>
-                                </li>
+                                    @if(User.IsInRole("Admin"))
+                                    {
+                                        <li class="nav-item">
+                                            <a class="nav-link text-dark" href="#">Hoşgeldiniz: @User.Identity.Name</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link text-dark" asp-area="" asp-controller="Account"
+                                                asp-action="Logout">Oturumu Kapat</a>
+                                        </li>
+                                    }
                                 }
                                 else
                                 {
@@ -103,15 +83,15 @@
             <script src="~/lib/jquery/dist/jquery.min.js"></script>
             <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
             <script src="~/js/site.js" asp-append-version="true"></script>
+            @RenderSection("Scripts", required: false)
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    @if (!string.IsNullOrEmpty(username))
+                    @if (User.Identity?.IsAuthenticated == true)
                     {
-                    <li><a href="#">Hoşgeldiniz: @username</a></li>
+                    <li><a href="#">Hoşgeldiniz: @User.Identity.Name</a></li>
                     }
                 </ul>
             </div>
         </body>
 
         </html>
-        @RenderSection("Scripts", required: false)

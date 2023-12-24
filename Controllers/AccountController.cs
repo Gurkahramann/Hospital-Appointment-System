@@ -1,21 +1,30 @@
 using ASPWebProgramming.Data;
 using Microsoft.AspNetCore.Mvc;
 using AspWebProgram.Models;
-using AspWebProgram.Models;
 using Microsoft.AspNetCore.Identity;
+using System.Data.Common;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Controllers
 {
 
     public class AccountController : Controller
     {
-        private readonly UserManager<AppUser> _userManager;
-        private readonly SignInManager<AppUser> _signInManager;
-
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        private UserManager<AppUser> _userManager;
+        private RoleManager<AppRole> _roleManager;
+        private SignInManager<AppUser> _signInManager;
+        private DataContext db;
+        public AccountController(
+            UserManager<AppUser> userManager,
+            RoleManager<AppRole> roleManager,
+            SignInManager<AppUser> signInManager,DataContext _context
+            )
         {
             _userManager = userManager;
+            _roleManager = roleManager;
+            db=_context;
             _signInManager = signInManager;
+
         }
         public ActionResult Login()
         {
@@ -27,11 +36,11 @@ namespace Controllers
             if (ModelState.IsValid)
             {
                 // Kullanıcıyı bul
-                var user = await _userManager.FindByNameAsync(model.Username);
+                var user = await _userManager.FindByEmailAsync(model.Username);
 
                 if (user != null)
                 {
-                    // Şifreyi doğrula ve oturum aç
+                    await _signInManager.SignOutAsync();
                     var result = await _signInManager.PasswordSignInAsync(user, model.Password, isPersistent: false, lockoutOnFailure: false);
 
                     if (result.Succeeded)
@@ -39,7 +48,6 @@ namespace Controllers
                         return RedirectToAction("Index", "Home");
                     }
                 }
-
                 // Kullanıcı adı veya şifre hatalıysa
                 ModelState.AddModelError("", "Kullanıcı adı veya şifre hatalı.");
             }
@@ -47,15 +55,12 @@ namespace Controllers
             return View(model);
         }
 
-
-
-
-
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
+                //await EnsureRolesCreated();
                 var user = new AppUser
                 {
                     UserName = model.HastaEposta, // Identity için gerekli
@@ -68,10 +73,19 @@ namespace Controllers
                     Password = model.Password
 
                 };
-
+                var hasta = new Hasta
+                {
+                    HastaTc = model.HastaTc,
+                    HastaAd = model.HastaAd,
+                    HastaSoyad = model.HastaSoyad,
+                    HastaTel = model.HastaTel,
+                    HastaEposta = model.HastaEposta,
+                    HastaCinsiyet = model.HastaCinsiyet,
+                    HastaSifre = model.Password
+                };
                 // Kullanıcıyı oluştur
                 var result = await _userManager.CreateAsync(user, model.Password);
-
+                db.Hastalar.Add(hasta);
                 if (result.Succeeded)
                 {
                     if (model.HastaEposta == "g211210028@sakarya.edu.tr")
@@ -92,7 +106,6 @@ namespace Controllers
                                 ModelState.AddModelError("", error.Description);
                             }
                             // Kullanıcı oluşturma işlemini geri alabilirsiniz
-                            await _userManager.DeleteAsync(user);
                             return View(model);
                         }
                     }
@@ -108,16 +121,15 @@ namespace Controllers
 
             // Eğer model geçersizse, formu tekrar göster
             return View(model);
-        }
-
+        }        
         public ActionResult Register()
         {
             return View();
         }
 
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            HttpContext.Session.Clear(); // Oturumu temizle
+            await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home"); // Anasayfaya yönlendir
         }
     }
