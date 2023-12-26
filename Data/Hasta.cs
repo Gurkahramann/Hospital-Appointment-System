@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-namespace ASPWebProgramming.Data
+namespace AspWebProgramming.Data
 {
     public class Hasta
     {
@@ -11,6 +11,8 @@ namespace ASPWebProgramming.Data
         public string? HastaTel { get; set; }
         public string? HastaEposta { get; set; }
         public string? HastaCinsiyet { get; set; }
-        public string? HastaSifre {get; set;}
+        public string? HastaSifre { get; set; }
+        public string? Rol { get; set; }
+
     }
 }

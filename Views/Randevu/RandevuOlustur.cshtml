@@ -1,0 +1,32 @@
+@model AspWebProgramming.Data.Randevu
+
+@{
+    ViewData["Title"] = "Randevu Oluştur";
+}
+
+<h2>Add Appointment</h2>
+<hr>
+<form asp-controller="Randevu" asp-action="RandevuOlustur" method="post">
+
+    <div class="mb3">
+        <label asp-for="HastaId" class="form-label">Patient Id</label>
+        <select asp-for="HastaId" asp-items="ViewBag.Hastalar" class="form-control">
+            <option value="">Choose</option>
+        </select>
+    </div>
+    <div class="mb3">
+        <label asp-for="DoktorId" class="form-label">Doctor Id</label>
+        <select asp-for="DoktorId" asp-items="ViewBag.Doktorlar" class="form-control">
+            <option value="">Choose</option>
+        </select>
+    </div>
+
+
+
+    <div class="mb3">
+        <label asp-for="RandevuTarih" class="form-label">Appointment Date</label>
+        <input asp-for="RandevuTarih" class="form-control">
+    </div>
+
+    <button type="submit" class="btn btn-secondary">Save</button>
+</form>

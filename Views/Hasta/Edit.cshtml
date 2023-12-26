@@ -1,4 +1,4 @@
-@model ASPWebProgramming.Data.Hasta
+@model AspWebProgramming.Data.Hasta
 
 @{
     ViewData["Title"] = "Hasta Düzenle";
@@ -48,7 +48,11 @@
         </select>
         <span asp-validation-for="HastaCinsiyet" class="text-danger"></span>
     </div>
-
+    <div class="form-group">
+        <label asp-for="HastaSifre"></label>
+        <input asp-for="HastaSifre" class="form-control" type="password" />
+        <span asp-validation-for="HastaSifre" class="text-danger"></span>
+    </div>
     <button type="submit" class="btn btn-primary">Kaydet</button>
 </form>
 

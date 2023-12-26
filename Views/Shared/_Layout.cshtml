@@ -1,97 +1,107 @@
-﻿        <!DOCTYPE html>
-        <html lang="en">
+﻿@inject IHttpContextAccessor HttpContextAccessor
 
-        <head>
-            <meta charset="utf-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>@ViewData["Title"] - AspWebProgram</title>
-            <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"
-                id="bootstrap-css">
-            <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-            <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-            <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-            <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-            <link rel="stylesheet" href="~/AspWebProgram.styles.css" asp-append-version="true" />
-        </head>
-
-        <body>
-            <header>
-                <nav
-                    class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-                    <div class="container-fluid">
-                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AspWebProgram</a>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                            <ul class="navbar-nav flex-grow-1">
+@{
+    var username = HttpContextAccessor.HttpContext.Session.GetString("Username");
+    bool isLoggedIn = !string.IsNullOrEmpty(username);
+    var userRole = HttpContextAccessor.HttpContext.Session.GetString("UserRole");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - AspWebProgram</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/AspWebProgram.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AspWebProgram</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        @if (isLoggedIn)
+                        {
+                            if (userRole == "Hasta")
+                            {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home"
-                                        asp-action="Index">Home</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home for Hasta</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home"
-                                        asp-action="Privacy">Privacy</a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Account" asp-action="Register">Kayıt Ol</a>
-                                </li>
-                                
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Hasta" asp-action="Index">Hastaları
-                                        Listele</a>
-                                </li>
-                                @if (User.Identity?.IsAuthenticated == true)
-                                {
-                                    @if(User.IsInRole("Admin"))
-                                    {
-                                        <li class="nav-item">
-                                            <a class="nav-link text-dark" href="#">Hoşgeldiniz: @User.Identity.Name</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link text-dark" asp-area="" asp-controller="Account"
-                                                asp-action="Logout">Oturumu Kapat</a>
-                                        </li>
-                                    }
-                                }
-                                else
-                                {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account"
-                                        asp-action="Login">Login</a>
-                                </li>
-                                }
+                            }
+                        }
+                        <!-- <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li> -->
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Randevu" asp-action="IndexRandevu">Privacy</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Randevu" asp-action="RandevuOlustur">Randevu Olustur</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Doktor" asp-action="Index">Doktor Ekle</a>
+                        </li>
+                        @if (!isLoggedIn)
+                        {
+                         <li class="nav-item">
+                         <a class="nav-link" asp-controller="Account" asp-action="Register">Kayıt Ol</a>
+                        </li>
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Hasta" asp-action="Index">Hastaları Listele</a>
+                        </li>
+                        @if (!string.IsNullOrEmpty(username))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="#">Hoşgeldiniz: @username</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Oturumu Kapat</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                        }
                             </ul>
-                        </div>
-                    </div>
-                </nav>
-            </header>
-            <div class="container">
-                <main role="main" class="pb-3">
-                    @RenderBody()
-                </main>
-            </div>
-
-            <footer class="border-top footer text-muted">
-                <div class="container">
-                    &copy; 2023 - AspWebProgram - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                 </div>
-            </footer>
-            <script src="~/lib/jquery/dist/jquery.min.js"></script>
-            <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-            <script src="~/js/site.js" asp-append-version="true"></script>
-            @RenderSection("Scripts", required: false)
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    @if (User.Identity?.IsAuthenticated == true)
-                    {
-                    <li><a href="#">Hoşgeldiniz: @User.Identity.Name</a></li>
-                    }
-                </ul>
             </div>
-        </body>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
 
-        </html>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2023 - AspWebProgram - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+            @if (!string.IsNullOrEmpty(username))
+            {
+                <li><a href="#">Hoşgeldiniz: @username</a></li>
+            }
+        </ul>
+    </div>
+</body>
+
+</html>
+@RenderSection("Scripts", required: false)

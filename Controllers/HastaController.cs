@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using ASPWebProgramming.Data;
+using AspWebProgramming.Data;
 
 public class HastaController : Controller
 {
@@ -36,7 +36,6 @@ public IActionResult Edit(int id, Hasta hasta)
 
     if (ModelState.IsValid)
     {
-        hasta.HastaSifre = $"{hasta.HastaTc.Substring(0, 3)}{hasta.HastaTel.Substring(hasta.HastaTel.Length - 3)}";
         _context.Update(hasta);
         _context.SaveChanges();
         return RedirectToAction(nameof(Index));

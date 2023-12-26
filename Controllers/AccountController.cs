@@ -1,52 +1,54 @@
-using ASPWebProgramming.Data;
+using AspWebProgramming.Data;
 using Microsoft.AspNetCore.Mvc;
 using AspWebProgram.Models;
-using Microsoft.AspNetCore.Identity;
-using System.Data.Common;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Controllers
 {
 
     public class AccountController : Controller
     {
-        private UserManager<AppUser> _userManager;
-        private RoleManager<AppRole> _roleManager;
-        private SignInManager<AppUser> _signInManager;
         private DataContext db;
-        public AccountController(
-            UserManager<AppUser> userManager,
-            RoleManager<AppRole> roleManager,
-            SignInManager<AppUser> signInManager,DataContext _context
-            )
-        {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            db=_context;
-            _signInManager = signInManager;
 
+        public AccountController(DataContext context)
+        {
+            db = context;
         }
         public ActionResult Login()
         {
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Login(LoginModel model)
+        public ActionResult Login(LoginModel model)
         {
             if (ModelState.IsValid)
             {
-                // Kullanıcıyı bul
-                var user = await _userManager.FindByEmailAsync(model.Username);
-
-                if (user != null)
+                // Önce adminler arasında kontrol et
+                var adminUser = db.Adminler
+                    .FirstOrDefault(u => u.KullaniciAdi == model.Username && u.Sifre == model.Password);
+                var hastaUser = db.Hastalar
+                        .FirstOrDefault(h => h.HastaTc == model.Username &&
+                         h.HastaSifre == model.Password);
+                var doktorUser = db.Doktorlar.FirstOrDefault(u => u.DoktorTc == model.Username && u.DoktorSifre == model.Password);
+                if (adminUser != null)
                 {
-                    await _signInManager.SignOutAsync();
-                    var result = await _signInManager.PasswordSignInAsync(user, model.Password, isPersistent: false, lockoutOnFailure: false);
-
-                    if (result.Succeeded)
+                    HttpContext.Session.SetString("Username", adminUser.KullaniciAdi);
+                    HttpContext.Session.SetString("UserRole", "Admin"); // Örnek bir rol ataması
+                    return RedirectToAction("Index", "Home");
+                }
+                else if (hastaUser != null)
+                {
+                    if (hastaUser != null)
                     {
+                        HttpContext.Session.SetString("Username", hastaUser.HastaAd);
+                        HttpContext.Session.SetString("UserRole", "Hasta"); // Örnek bir rol ataması
                         return RedirectToAction("Index", "Home");
                     }
+                }
+                else if (doktorUser != null)
+                {
+                    HttpContext.Session.SetString("Username", doktorUser.DoktorTc);
+                    HttpContext.Session.SetString("UserRole", "Doktor"); // Örnek bir rol ataması
+                    return RedirectToAction("Index", "Home");
                 }
                 // Kullanıcı adı veya şifre hatalıysa
                 ModelState.AddModelError("", "Kullanıcı adı veya şifre hatalı.");
@@ -55,81 +57,79 @@ namespace Controllers
             return View(model);
         }
 
+
+
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                //await EnsureRolesCreated();
-                var user = new AppUser
-                {
-                    UserName = model.HastaEposta, // Identity için gerekli
-                    Email = model.HastaEposta,
-                    HastaTc = model.HastaTc,
-                    HastaAd = model.HastaAd,
-                    HastaSoyad = model.HastaSoyad,
-                    HastaTel = model.HastaTel,
-                    HastaCinsiyet = model.HastaCinsiyet,
-                    Password = model.Password
 
-                };
-                var hasta = new Hasta
+                if (model.HastaEposta == "g211210028@sakarya.edu.tr")
                 {
-                    HastaTc = model.HastaTc,
-                    HastaAd = model.HastaAd,
-                    HastaSoyad = model.HastaSoyad,
-                    HastaTel = model.HastaTel,
-                    HastaEposta = model.HastaEposta,
-                    HastaCinsiyet = model.HastaCinsiyet,
-                    HastaSifre = model.Password
-                };
-                // Kullanıcıyı oluştur
-                var result = await _userManager.CreateAsync(user, model.Password);
-                db.Hastalar.Add(hasta);
-                if (result.Succeeded)
-                {
-                    if (model.HastaEposta == "g211210028@sakarya.edu.tr")
+                    // Admin olarak kaydet
+                    // var existingUser = await db.Adminler.FirstOrDefaultAsync(h => h.KullaniciAdi == model.HastaEposta);
+                    // if (existingUser != null)
+                    // {
+                    //     // Aynı e-posta ile kayıtlı bir kullanıcı varsa, uygun bir hata mesajıyla geri dön
+                    //     ModelState.AddModelError(string.Empty, "Bu e-posta adresi zaten kullanılmaktadır.");
+                    //     return View(model);
+                    // }
+                    var admin = new Admin
                     {
-                        // Kullanıcı şifresini değiştir
-                        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                        var passwordResult = await _userManager.ResetPasswordAsync(user, token, "sau");
+                        KullaniciAdi = model.HastaEposta, // Kullanıcı adı olarak adı kullanabilirsiniz
+                        Sifre = "sau", // Şifre varsayılan olarak "sau"
+                        Rol = "Admin" // Admin rolünü ata
 
-                        if (passwordResult.Succeeded)
-                        {
-                            await _userManager.AddToRoleAsync(user, "Admin");
-                        }
-                        else
-                        {
-                            // Şifre değiştirme işlemi sırasında hata oluşursa
-                            foreach (var error in passwordResult.Errors)
-                            {
-                                ModelState.AddModelError("", error.Description);
-                            }
-                            // Kullanıcı oluşturma işlemini geri alabilirsiniz
-                            return View(model);
-                        }
-                    }
-                    else
-                    {
-                        await _userManager.AddToRoleAsync(user, "User");
-                    }
-
-                    // Kullanıcı başarıyla oluşturulduktan sonra başka bir sayfaya yönlendir
-                    return RedirectToAction("Index", "Home");
+                        // Diğer gereken alanlar...
+                    };
+                    db.Adminler.Add(admin);
                 }
+                else
+                {
+                    // var existingUser = await db.Hastalar.FirstOrDefaultAsync(h => h.HastaTc == model.HastaTc);
+                    // if (existingUser != null)
+                    // {
+                    //     // Aynı e-posta ile kayıtlı bir kullanıcı varsa, uygun bir hata mesajıyla geri dön
+                    //     ModelState.AddModelError(string.Empty, "Bu TCN kullanılmaktadır.");
+                    //     return View(model);
+                    // }
+                    var hasta = new Hasta
+                    {
+                        HastaTc = model.HastaTc,
+                        HastaAd = model.HastaAd,
+                        HastaSoyad = model.HastaSoyad,
+                        HastaTel = model.HastaTel,
+                        HastaEposta = model.HastaEposta,
+                        HastaCinsiyet = model.HastaCinsiyet,
+                        HastaSifre = model.Password,
+                        Rol = "Hasta"
+                    };
+
+                    // Hasta entity'sini veritabanına ekle
+                    db.Hastalar.Add(hasta);
+                }
+                // ViewModel verilerini Hasta entity'sine dönüştür
+
+                await db.SaveChangesAsync(); // Değişiklikleri kaydet
+
+                // Başarılı kayıttan sonra kullanıcıyı başka bir sayfaya yönlendir
+                return RedirectToAction("Index", "Home");
             }
 
             // Eğer model geçersizse, formu tekrar göster
             return View(model);
-        }        
+        }
         public ActionResult Register()
         {
             return View();
         }
 
-        public async Task<IActionResult> Logout()
+        public IActionResult Logout()
         {
-            await _signInManager.SignOutAsync();
+            HttpContext.Session.Clear(); // Oturumu temizle
+            HttpContext.Session.Remove("UserRole");
             return RedirectToAction("Index", "Home"); // Anasayfaya yönlendir
         }
     }

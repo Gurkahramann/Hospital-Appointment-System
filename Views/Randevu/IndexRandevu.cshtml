@@ -1,0 +1,30 @@
+@model IEnumerable<AspWebProgramming.Data.Randevu>
+
+    @{
+        ViewData["Title"] = "Randevu Listesi";
+    }
+    
+    <h2>Randevu Listesi</h2>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Doktor Adı</th>
+                <th>Hasta Adı</th>
+                <th>Randevu Tarihi</th>
+                <!-- Diğer sütun başlıkları ekle -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var randevu in Model)
+            {
+                <tr>
+                    <td>@randevu.Doktor.DoktorAdSoyad</td>
+                    <td>@randevu.Hasta.HastaAd</td>
+                    <td>@randevu.RandevuTarih</td>
+                    <!-- Diğer sütunları ekle -->
+                </tr>
+            }
+        </tbody>
+    </table>
+    
