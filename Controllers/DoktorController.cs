@@ -1,6 +1,7 @@
 using AspWebProgramming.Data;
 using Microsoft.AspNetCore.Mvc;
 using AspWebProgram.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Controllers
 {
@@ -11,9 +12,12 @@ namespace Controllers
         {
             db = context;
         }
-
+        public async Task<IActionResult> Index()
+        {
+            return View(await db.Doktorlar.ToListAsync());
+        }
         [HttpPost]
-        public async Task<IActionResult> Index(RegisterDoktorModel model)
+        public async Task<IActionResult> Register(RegisterDoktorModel model)
         {
             if (ModelState.IsValid)
             {
@@ -30,13 +34,13 @@ namespace Controllers
                     DoktorPoliklinik = model.SelectedPoliklinikId.ToString(), // Seçilen Poliklinik Id'sini string olarak ayarla
                     Rol = "Doktor"
                 };
-                var anaBilim=new AnaBilim()
+                var anaBilim = new AnaBilim()
                 {
-                    AnaBilimAd=model.SelectedAnaBilimId
+                    AnaBilimAd = model.SelectedAnaBilimId
                 };
-                   var poliklinik=new Poliklinik()
+                var poliklinik = new Poliklinik()
                 {
-                    PoliklinikAd=model.SelectedPoliklinikId
+                    PoliklinikAd = model.SelectedPoliklinikId
                 };
                 // Değişiklikleri kaydet
                 db.AnaBilimler.Add(anaBilim);
@@ -51,8 +55,41 @@ namespace Controllers
             // ModelState geçerli değilse, hata mesajlarıyla birlikte sayfayı tekrar gösterin
             return View(model);
         }
-
-
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var doktor = db.Doktorlar.Find(id);
+            if (doktor == null)
+            {
+                return NotFound();
+            }
+            return View(doktor);
+        }
+        [HttpPost]
+        public IActionResult Edit(int id, Doktor doktor)
+        {
+            if (id != doktor.DoktorId)
+            {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+                db.Update(doktor);
+                db.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(doktor);
+        }
+        public IActionResult Delete(int id)
+        {
+            var doktor = db.Doktorlar.Find(id);
+            if (doktor != null)
+            {
+                db.Doktorlar.Remove(doktor);
+                db.SaveChanges();
+            }
+            return RedirectToAction(nameof(Index));
+        }
         // public async Task<IActionResult> Index(RegisterDoktorModel model)
         // {
         //     // var selectedAnaBilim = db.AnaBilimler.FirstOrDefault(ab => ab.AnaBilimId == model.SelectedAnaBilimId);
@@ -96,7 +133,7 @@ namespace Controllers
 
         //     return View(model);
         // }
-        public ActionResult Index()
+        public ActionResult Register()
         {
 
             return View();

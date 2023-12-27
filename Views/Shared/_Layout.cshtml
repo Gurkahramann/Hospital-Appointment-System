@@ -42,13 +42,16 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li> -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Randevu" asp-action="IndexRandevu">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Randevu" asp-action="IndexRandevu">Randevu Listele</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Randevu" asp-action="RandevuOlustur">Randevu Olustur</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Doktor" asp-action="Index">Doktor Ekle</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Doktor" asp-action="Register">Doktor Ekle</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Doktor" asp-action="Index">Doktorları Listele</a>
                         </li>
                         @if (!isLoggedIn)
                         {

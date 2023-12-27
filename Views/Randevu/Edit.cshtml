@@ -1,13 +1,30 @@
 @model AspWebProgramming.Data.Randevu
 
 @{
-    ViewData["Title"] = "Randevu Oluştur";
+    ViewData["Title"] = "Randevu Edit";
 }
 
 <h2>Add Appointment</h2>
 <hr>
-<form asp-controller="Randevu" asp-action="RandevuOlustur" method="post">
 
+@if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+{
+    <div class="alert alert-danger">
+        <ul>
+            @foreach (var key in ViewData.ModelState.Keys)
+            {
+                foreach (var error in ViewData.ModelState[key].Errors)
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            }
+        </ul>
+    </div>
+}
+<hr>
+<form asp-controller="Randevu" asp-action="Edit" method="post">
+    <input type="hidden" asp-for="RandevuId" />
+    
     <div class="mb3">
         <label asp-for="HastaId" class="form-label">Hasta</label>
         <select asp-for="HastaId" asp-items="ViewBag.Hastalar" class="form-control">

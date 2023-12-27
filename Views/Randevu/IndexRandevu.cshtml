@@ -24,6 +24,10 @@
                     <td>@randevu.RandevuTarih</td>
                     <!-- Diğer sütunları ekle -->
                 </tr>
+                <td>
+                    <a asp-controller="Randevu" asp-action="Edit" asp-route-id="@randevu.RandevuId" class="btn btn-primary">Edit</a>
+                    <a class="btn btn-danger" href="javascript:void(0)" onclick="confirmDelete('@randevu.RandevuId')">Delete</a>
+                </td>
             }
         </tbody>
     </table>

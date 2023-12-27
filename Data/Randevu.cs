@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using AspWebProgramming.Data;
 
 namespace AspWebProgramming.Data
@@ -8,9 +9,16 @@ namespace AspWebProgramming.Data
         [Key]
         public int RandevuId { get; set; }
         public int HastaId { get; set; }
-        public Hasta Hasta { get; set; } = null!;
+
+        [ForeignKey("HastaId")]
+        public Hasta Hasta { get; set; } // Eğer bu alan için Required anotasyonu varsa kaldırın
+
         public int DoktorId { get; set; }
-        public Doktor Doktor { get; set; } = null!;
+
+        [ForeignKey("DoktorId")]
+        public Doktor Doktor { get; set; } // Eğer bu alan için Required anotasyonu varsa kaldırın
+
         public DateTime RandevuTarih { get; set; }
     }
+
 }
