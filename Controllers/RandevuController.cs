@@ -1,7 +1,6 @@
 using System.Drawing;
 using System.Globalization;
 using AspWebProgram.Models;
-//using AspWebProgramming.Data;
 using AspWebProgramming.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -29,20 +28,57 @@ namespace Controllers
         {
             ViewBag.Hastalar = new SelectList(await dbcontext.Hastalar.ToListAsync(), "HastaId", "HastaAd");
             ViewBag.Doktorlar = new SelectList(await dbcontext.Doktorlar.ToListAsync(), "DoktorId", "DoktorAdSoyad");
-
+            
             return View();
         }
         [HttpGet]
-        public async Task<IActionResult> GetRandevuSaatleriJson(DateTime secilenTarih)
+        public async Task<IActionResult> GetRandevuSaatleriJsonForEdit(DateTime secilenTarih, int randevuId)
         {
-            var saatler = await GetRandevuSaatleri(secilenTarih);
+            var saatler = await GetRandevuSaatleriEdit(secilenTarih, randevuId);
             return Json(new SelectList(saatler, "Value", "Text"));
         }
-        private async Task<List<SelectListItem>> GetRandevuSaatleri(DateTime randevuTarihi)
+        [HttpGet]
+        public async Task<IActionResult> GetRandevuSaatleriJson(DateTime secilenTarih,int doktorId)
+        {
+            var saatler = await GetRandevuSaatleri(secilenTarih,doktorId);
+            return Json(new SelectList(saatler, "Value", "Text"));
+        }
+        private async Task<List<SelectListItem>> GetRandevuSaatleriEdit(DateTime randevuTarihi, int randevuId)
+        {
+            var mevcutRandevu = await dbcontext.Randevular.FindAsync(randevuId);
+            var mevcutRandevuSaati = mevcutRandevu?.RandevuSaati;
+
+            var alinanSaatler = await dbcontext.Randevular
+                .Where(r => r.RandevuTarih.Date == randevuTarihi.Date && r.RandevuId != randevuId)
+                .Select(r => r.RandevuSaati)
+                .ToListAsync();
+
+            var saatler = new List<SelectListItem>();
+            var baslangic = new TimeSpan(9, 0, 0); 
+            var bitis = new TimeSpan(17, 0, 0);   
+            var aralik = TimeSpan.FromMinutes(30);
+
+            for (var saat = baslangic; saat < bitis; saat += aralik)
+            {
+                if (!alinanSaatler.Contains(saat) || saat == mevcutRandevuSaati)
+                {
+                    saatler.Add(new SelectListItem
+                    {
+                        Value = saat.ToString(@"hh\:mm"),
+                        Text = saat.ToString(@"hh\:mm"),
+                        Selected = saat == mevcutRandevuSaati
+                    });
+                }
+            }
+
+            return saatler;
+        }
+
+        private async Task<List<SelectListItem>> GetRandevuSaatleri(DateTime randevuTarihi,int doktorId)
         {
 
             var alinanSaatler = await dbcontext.Randevular
-                .Where(r => r.RandevuTarih.Date == randevuTarihi.Date)
+                .Where(r => r.RandevuTarih.Date == randevuTarihi.Date && r.DoktorId==doktorId)
                 .Select(r => r.RandevuSaati)
                 .ToListAsync();
 
@@ -101,10 +137,35 @@ namespace Controllers
             await dbcontext.SaveChangesAsync();
             return RedirectToAction("Index", "Home");
         }
+        // [HttpGet]
+        // public IActionResult Edit(int id)
+        // {
+        //     var randevu = dbcontext.Randevular.SingleOrDefault(r => r.RandevuId == id);
+        //     if (randevu == null)
+        //     {
+        //         return NotFound();
+        //     }
+
+        //     var viewModel = new RandevuEditViewModel
+        //     {
+        //         RandevuId = randevu.RandevuId,
+        //         HastaId = randevu.HastaId,
+        //         DoktorId = randevu.DoktorId,
+        //         RandevuTarih = randevu.RandevuTarih,
+        //         RandevuSaati = randevu.RandevuSaati
+        //     };
+
+        //     ViewBag.Hastalar = new SelectList(dbcontext.Hastalar, "HastaId", "HastaAd", randevu.HastaId);
+        //     ViewBag.Doktorlar = new SelectList(dbcontext.Doktorlar, "DoktorId", "DoktorAd", randevu.DoktorId);
+        //     return View(viewModel);
+        // }
         [HttpGet]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var randevu = dbcontext.Randevular.SingleOrDefault(r => r.RandevuId == id);
+            var randevu = await dbcontext.Randevular
+                .Include(r => r.Hasta)
+                .Include(r => r.Doktor)
+                .SingleOrDefaultAsync(r => r.RandevuId == id);
             if (randevu == null)
             {
                 return NotFound();
@@ -121,9 +182,10 @@ namespace Controllers
 
             ViewBag.Hastalar = new SelectList(dbcontext.Hastalar, "HastaId", "HastaAd", randevu.HastaId);
             ViewBag.Doktorlar = new SelectList(dbcontext.Doktorlar, "DoktorId", "DoktorAd", randevu.DoktorId);
+            ViewBag.RandevuSaatleri = await GetRandevuSaatleriEdit(randevu.RandevuTarih, randevu.RandevuId);
+
             return View(viewModel);
         }
-
         [HttpPost]
         public IActionResult Edit(int id, RandevuEditViewModel viewModel)
         {
