@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Globalization;
 using AspWebProgram.Models;
 //using AspWebProgramming.Data;
 using AspWebProgramming.Data;
@@ -31,7 +32,68 @@ namespace Controllers
 
             return View();
         }
+        [HttpGet]
+        public async Task<IActionResult> GetRandevuSaatleriJson(DateTime secilenTarih)
+        {
+            var saatler = await GetRandevuSaatleri(secilenTarih);
+            return Json(new SelectList(saatler, "Value", "Text"));
+        }
+        private async Task<List<SelectListItem>> GetRandevuSaatleri(DateTime randevuTarihi)
+        {
 
+            var alinanSaatler = await dbcontext.Randevular
+                .Where(r => r.RandevuTarih.Date == randevuTarihi.Date)
+                .Select(r => r.RandevuSaati)
+                .ToListAsync();
+
+            var saatler = new List<SelectListItem>();
+            var baslangic = new TimeSpan(9, 0, 0);
+            var bitis = new TimeSpan(17, 0, 0);
+            var aralik = TimeSpan.FromMinutes(30);
+
+            for (var saat = baslangic; saat < bitis; saat += aralik)
+            {
+                if (!alinanSaatler.Contains(saat))
+                {
+                    saatler.Add(new SelectListItem
+                    {
+                        Value = saat.ToString(),
+                        Text = saat.ToString(@"hh\:mm")
+                    });
+                }
+            }
+
+            return saatler;
+        }
+
+        // private async Task<List<SelectListItem>> GetRandevuSaatleri(DateTime? secilenTarih)
+        // {
+        //     var mevcutRandevular = new HashSet<TimeSpan>();
+
+        //     if (secilenTarih.HasValue)
+        //     {
+        //         var randevuTarihleri = await dbcontext.Randevular
+        //             .Where(r => r.RandevuTarih.Date == secilenTarih.Value.Date)
+        //             .Select(r => r.RandevuTarih.TimeOfDay)
+        //             .ToListAsync();
+
+        //         mevcutRandevular = new HashSet<TimeSpan>(randevuTarihleri);
+        //     }
+
+        //     var saatler = new List<SelectListItem>();
+        //     var baslangic = new TimeSpan(9, 0, 0); // Sabah 9:00
+        //     var bitis = new TimeSpan(17, 0, 0);    // Akşam 5:00
+
+        //     for (var saat = baslangic; saat < bitis; saat = saat.Add(TimeSpan.FromMinutes(30)))
+        //     {
+        //         if (!mevcutRandevular.Contains(saat))
+        //         {
+        //             saatler.Add(new SelectListItem { Value = saat.ToString(), Text = saat.ToString(@"hh\:mm") });
+        //         }
+        //     }
+
+        //     return saatler;
+        // }
         [HttpPost]
         public async Task<IActionResult> RandevuOlustur(Randevu model)
         {
@@ -39,98 +101,69 @@ namespace Controllers
             await dbcontext.SaveChangesAsync();
             return RedirectToAction("Index", "Home");
         }
-
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            // Include ile ilişkili Hasta ve Doktor nesnelerini yükleyerek Randevu nesnesini çekin
-            var randevu = dbcontext.Randevular
-                .Include(r => r.Hasta) // Hasta bilgilerini dahil et
-                .Include(r => r.Doktor) // Doktor bilgilerini dahil et
-                .SingleOrDefault(r => r.RandevuId == id); // SingleOrDefault kullanarak belirli bir id'ye sahip randevuyu bulun
-
+            var randevu = dbcontext.Randevular.SingleOrDefault(r => r.RandevuId == id);
             if (randevu == null)
             {
                 return NotFound();
             }
 
-            // Hastalar ve Doktorlar için SelectList'leri hazırlayın
-            ViewBag.Hastalar = new SelectList(dbcontext.Hastalar, "HastaId", "HastaAd", randevu.HastaId); // 'Ad' alanınızın adını modelinizdeki uygun alana göre değiştirin
-            ViewBag.Doktorlar = new SelectList(dbcontext.Doktorlar, "DoktorId", "DoktorAd", randevu.DoktorId); // 'Ad' alanınızın adını modelinizdeki uygun alana göre değiştirin
+            var viewModel = new RandevuEditViewModel
+            {
+                RandevuId = randevu.RandevuId,
+                HastaId = randevu.HastaId,
+                DoktorId = randevu.DoktorId,
+                RandevuTarih = randevu.RandevuTarih,
+                RandevuSaati = randevu.RandevuSaati
+            };
 
-            return View(randevu);
+            ViewBag.Hastalar = new SelectList(dbcontext.Hastalar, "HastaId", "HastaAd", randevu.HastaId);
+            ViewBag.Doktorlar = new SelectList(dbcontext.Doktorlar, "DoktorId", "DoktorAd", randevu.DoktorId);
+            return View(viewModel);
         }
+
         [HttpPost]
-        public IActionResult Edit(int id, Randevu randevu)
+        public IActionResult Edit(int id, RandevuEditViewModel viewModel)
         {
-            if (id != randevu.RandevuId)
+            if (id != viewModel.RandevuId)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
+                var randevuToUpdate = dbcontext.Randevular.Find(id);
+                if (randevuToUpdate == null)
                 {
-                    // Track değişiklikleri
-                    var randevuToUpdate = dbcontext.Randevular.Find(id);
-                    if (randevuToUpdate == null)
-                    {
-                        return NotFound();
-                    }
+                    return NotFound();
+                }
 
-                    // Yalnızca belirli alanların güncellenmesini sağlamak için:
-                    randevuToUpdate.HastaId = randevu.HastaId;
-                    randevuToUpdate.DoktorId = randevu.DoktorId;
-                    randevuToUpdate.RandevuTarih = randevu.RandevuTarih;
+                randevuToUpdate.HastaId = viewModel.HastaId;
+                randevuToUpdate.DoktorId = viewModel.DoktorId;
+                randevuToUpdate.RandevuTarih = viewModel.RandevuTarih;
+                randevuToUpdate.RandevuSaati = viewModel.RandevuSaati;
 
-                    // Değişiklikleri kaydet
-                    dbcontext.SaveChanges();
-                    return RedirectToAction("Home", "Index"); // Veya başka bir uygun action'a yönlendir
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!dbcontext.Randevular.Any(r => r.RandevuId == id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                catch (DbUpdateException)
-                {
-                    // Veritabanı güncelleme sırasında bir hata meydana geldi
-                    // Hata yönetimi burada yapılabilir
-                    ModelState.AddModelError("", "Bir hata oluştu ve kayıt güncellenemedi.");
-                }
+                dbcontext.SaveChanges();
+                return RedirectToAction("Index", "Home");
             }
-            else
+
+            ViewBag.Hastalar = new SelectList(dbcontext.Hastalar, "HastaId", "HastaAd", viewModel.HastaId);
+            ViewBag.Doktorlar = new SelectList(dbcontext.Doktorlar, "DoktorId", "DoktorAd", viewModel.DoktorId);
+
+            return View(viewModel);
+        }
+        public IActionResult Delete(int id)
+        {
+            var randevu = dbcontext.Randevular.Find(id);
+            if (randevu != null)
             {
-                var errors = ModelState.Select(x => new { x.Key, x.Value.Errors })
-                          .Where(y => y.Errors.Count > 0)
-                          .ToList();
-
-                // Hataları inceleyebilirsiniz veya loglayabilirsiniz
-                foreach (var error in errors)
-                {
-                    foreach (var errorMessage in error.Errors)
-                    {
-                        // Loglama için bir hata mesajı
-                        Console.WriteLine($"Key: {error.Key}, Error: {errorMessage.ErrorMessage}");
-                    }
-                }
-                // Eğer ModelState geçerli değilse veya bir hata oluştuysa, formu tekrar doldur
-                ViewBag.Hastalar = new SelectList(dbcontext.Hastalar, "HastaId", "HastaAd", randevu.HastaId); // 'Ad' alanınızın adını modelinizdeki uygun alana göre değiştirin
-                ViewBag.Doktorlar = new SelectList(dbcontext.Doktorlar, "DoktorId", "DoktorAd", randevu.DoktorId); // 'Ad' alanınızın adını modelinizdeki uygun alana göre değiştirin
-
-                return View(randevu);
+                dbcontext.Randevular.Remove(randevu);
+                dbcontext.SaveChanges();
             }
             return RedirectToAction("Index", "Home");
         }
-
-
     }
 
 

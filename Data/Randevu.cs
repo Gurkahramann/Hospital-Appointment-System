@@ -16,9 +16,14 @@ namespace AspWebProgramming.Data
         public int DoktorId { get; set; }
 
         [ForeignKey("DoktorId")]
-        public Doktor Doktor { get; set; } // Eğer bu alan için Required anotasyonu varsa kaldırın
-
+        public Doktor Doktor { get; set; } 
+        
+        [DataType(DataType.Date)]
         public DateTime RandevuTarih { get; set; }
+        
+        [DataType(DataType.Time)]
+        public TimeSpan RandevuSaati { get; set; }
+
     }
 
 }

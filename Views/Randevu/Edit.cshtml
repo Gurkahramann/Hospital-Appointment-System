@@ -1,47 +1,44 @@
-@model AspWebProgramming.Data.Randevu
+@model AspWebProgram.Models.RandevuEditViewModel
 
 @{
-    ViewData["Title"] = "Randevu Edit";
+    ViewData["Title"] = "Randevu Düzenle";
 }
 
-<h2>Add Appointment</h2>
-<hr>
+<h2>@ViewData["Title"]</h2>
 
-@if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
-{
-    <div class="alert alert-danger">
-        <ul>
-            @foreach (var key in ViewData.ModelState.Keys)
-            {
-                foreach (var error in ViewData.ModelState[key].Errors)
-                {
-                    <li>@error.ErrorMessage</li>
-                }
-            }
-        </ul>
-    </div>
-}
-<hr>
-<form asp-controller="Randevu" asp-action="Edit" method="post">
+<form asp-action="Edit" method="post">
     <input type="hidden" asp-for="RandevuId" />
     
-    <div class="mb3">
-        <label asp-for="HastaId" class="form-label">Hasta</label>
+    <div class="form-group">
+        <label asp-for="HastaId" class="control-label">Hasta</label>
         <select asp-for="HastaId" asp-items="ViewBag.Hastalar" class="form-control">
-            <option value="">Choose</option>
+            <option value="">Lütfen bir hasta seçiniz</option>
         </select>
+        <span asp-validation-for="HastaId" class="text-danger"></span>
     </div>
-    <div class="mb3">
-        <label asp-for="DoktorId" class="form-label">Doktor</label>
+
+    <div class="form-group">
+        <label asp-for="DoktorId" class="control-label">Doktor</label>
         <select asp-for="DoktorId" asp-items="ViewBag.Doktorlar" class="form-control">
-            <option value="">Choose</option>
+            <option value="">Lütfen bir doktor seçiniz</option>
+        </select>
+        <span asp-validation-for="DoktorId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="RandevuTarih" class="form-label">Randevu Tarihi</label>
+        <input asp-for="RandevuTarih" type="date" class="form-control">
+    </div>
+    <div class="form-group">
+        <label class="form-label">Randevu Saati</label>
+        <select asp-for="RandevuSaati" asp-items="ViewBag.RandevuSaatleri" class="form-control">
+            <option value="">Saat Seçiniz</option>
         </select>
     </div>
 
-    <div class="mb3">
-        <label asp-for="RandevuTarih" class="form-label">Randevu Tarihi</label>
-        <input asp-for="RandevuTarih" class="form-control">
-    </div>
-
-    <button type="submit" class="btn btn-secondary">Kaydet</button>
+    <button type="submit" class="btn btn-primary">Kaydet</button>
 </form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

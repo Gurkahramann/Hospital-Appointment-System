@@ -167,6 +167,9 @@ namespace AspWebProgram.Migrations
                     b.Property<int>("HastaId")
                         .HasColumnType("int");
 
+                    b.Property<TimeSpan>("RandevuSaati")
+                        .HasColumnType("time");
+
                     b.Property<DateTime>("RandevuTarih")
                         .HasColumnType("datetime2");
 

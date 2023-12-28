@@ -4,16 +4,16 @@
     ViewData["Title"] = "Randevu Oluştur";
 }
 
-<h2>Add Appointment</h2>
+<h2>@ViewData["Title"]</h2>
 <hr>
 <form asp-controller="Randevu" asp-action="RandevuOlustur" method="post">
-
     <div class="mb3">
         <label asp-for="HastaId" class="form-label">Hasta</label>
         <select asp-for="HastaId" asp-items="ViewBag.Hastalar" class="form-control">
             <option value="">Choose</option>
         </select>
     </div>
+
     <div class="mb3">
         <label asp-for="DoktorId" class="form-label">Doktor</label>
         <select asp-for="DoktorId" asp-items="ViewBag.Doktorlar" class="form-control">
@@ -23,8 +23,46 @@
 
     <div class="mb3">
         <label asp-for="RandevuTarih" class="form-label">Randevu Tarihi</label>
-        <input asp-for="RandevuTarih" class="form-control">
+        <input asp-for="RandevuTarih" type="date" class="form-control" id="RandevuTarih">
+    </div>
+
+    <div class="mb3">
+        <label for="RandevuSaati" class="form-label">Randevu Saati</label>
+        <select id="RandevuSaati" name="RandevuSaati" class="form-control">
+            <option value="">Saat Seçiniz</option>
+        </select>
     </div>
 
     <button type="submit" class="btn btn-secondary">Kaydet</button>
 </form>
+<script>
+    $(document).ready(function () {
+        var getRandevuSaatleriUrl = '@Url.Action("GetRandevuSaatleriJson", "Randevu")';
+        
+        // Randevu tarih alanının değişikliğini izle
+        $('#RandevuTarih').change(function () {
+            var secilenTarih = $(this).val();
+            if (!secilenTarih) {
+                $('#RandevuSaati').empty().append('<option value="">Saat Seçiniz</option>');
+                return;
+            }
+            
+            // Seçilen tarihe göre saatleri getir
+            $.ajax({
+                url: getRandevuSaatleriUrl,
+                type: 'GET',
+                data: { secilenTarih: secilenTarih },
+                success: function (saatler) {
+                    var randevuSaatiSelect = $('#RandevuSaati');
+                    randevuSaatiSelect.empty().append('<option value="">Saat Seçiniz</option>');
+                    $.each(saatler, function (index, item) {
+                        randevuSaatiSelect.append($('<option></option>').val(item.value).text(item.text));
+                    });
+                },
+                error: function () {
+                    alert('Saatler yüklenirken bir hata oluştu.');
+                }
+            });
+        });
+    });
+</script>

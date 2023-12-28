@@ -99,7 +99,8 @@ namespace AspWebProgram.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     HastaId = table.Column<int>(type: "int", nullable: false),
                     DoktorId = table.Column<int>(type: "int", nullable: false),
-                    RandevuTarih = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    RandevuTarih = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RandevuSaati = table.Column<TimeSpan>(type: "time", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspWebProgram.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231226175949_InitialCreate")]
+    [Migration("20231227235651_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -168,6 +168,9 @@ namespace AspWebProgram.Migrations
 
                     b.Property<int>("HastaId")
                         .HasColumnType("int");
+
+                    b.Property<TimeSpan>("RandevuSaati")
+                        .HasColumnType("time");
 
                     b.Property<DateTime>("RandevuTarih")
                         .HasColumnType("datetime2");
