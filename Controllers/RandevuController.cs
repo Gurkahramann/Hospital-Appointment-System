@@ -28,7 +28,7 @@ namespace Controllers
         {
             ViewBag.Hastalar = new SelectList(await dbcontext.Hastalar.ToListAsync(), "HastaId", "HastaAd");
             ViewBag.Doktorlar = new SelectList(await dbcontext.Doktorlar.ToListAsync(), "DoktorId", "DoktorAdSoyad");
-            
+
             return View();
         }
         [HttpGet]
@@ -73,7 +73,6 @@ namespace Controllers
 
             return saatler;
         }
-
         private async Task<List<SelectListItem>> GetRandevuSaatleri(DateTime randevuTarihi,int doktorId)
         {
 
