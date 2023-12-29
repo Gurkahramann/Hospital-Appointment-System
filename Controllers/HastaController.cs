@@ -36,6 +36,7 @@ public IActionResult Edit(int id, Hasta hasta)
 
     if (ModelState.IsValid)
     {
+        hasta.Rol="Hasta";
         _context.Update(hasta);
         _context.SaveChanges();
         return RedirectToAction(nameof(Index));

@@ -1,66 +1,62 @@
 @model AspWebProgram.Models.RegisterViewModel
 
 @{
-    ViewData["Title"] = "Kayıt Ol";
+    <!-- ViewData["Title"] = "Kayıt Ol"; -->
 }
 
 <form asp-controller="Account" asp-action="Register" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <div class="form-group">
-        <label asp-for="HastaAd"></label>
+        <label asp-for="HastaAd">@_localization.GetKey("Adı"):</label>
         <input asp-for="HastaAd" class="form-control" />
         <span asp-validation-for="HastaAd" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="HastaSoyad"></label>
+        <label asp-for="HastaSoyad">@_localization.GetKey("Soyadı"):</label>
         <input asp-for="HastaSoyad" class="form-control" />
         <span asp-validation-for="HastaSoyad" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="HastaTc"></label>
+        <label asp-for="HastaTc">@_localization.GetKey("TC Kimlik Numarası"):</label>
         <input asp-for="HastaTc" class="form-control" />
         <span asp-validation-for="HastaTc" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="HastaTel"></label>
+        <label asp-for="HastaTel">@_localization.GetKey("Telefon Numarası"):</label>
         <input asp-for="HastaTel" class="form-control" />
         <span asp-validation-for="HastaTel" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="HastaEposta"></label>
+        <label asp-for="HastaEposta">@_localization.GetKey("E-Posta"):</label>
         <input asp-for="HastaEposta" class="form-control" />
         <span asp-validation-for="HastaEposta" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="HastaCinsiyet"></label>
+        <label asp-for="HastaCinsiyet">@_localization.GetKey("Cinsiyet"):</label>
         <select asp-for="HastaCinsiyet" class="form-control">
-            <option value="">Cinsiyet Seçiniz</option>
-            <option value="Erkek">Erkek</option>
-            <option value="Kadın">Kadın</option>
+            <option value="">@_localization.GetKey("Cinsiyet Seçiniz")</option>
+            <option value="Erkek">@_localization.GetKey("Erkek")</option>
+            <option value="Kadın">@_localization.GetKey("Kadın")</option>
         </select>
         <span asp-validation-for="HastaCinsiyet" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Password"></label>
+        <label asp-for="Password">@_localization.GetKey("Şifre"):</label>
         <input asp-for="Password" class="form-control" type="password" />
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
-
-    <!-- Yeni Eklenen Şifre Doğrulama Alanı -->
     <div class="form-group">
-        <label asp-for="ConfirmPassword"></label>
+        <label asp-for="ConfirmPassword">@_localization.GetKey("Şifre Doğrula"):</label>
         <input asp-for="ConfirmPassword" class="form-control" type="password" />
         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
     </div>
-
-    <!-- Kayıt Ol Butonu -->
     <div class="form-group">
-        <input type="submit" value="Kayıt Ol" class="btn btn-primary" />
+        <input type="submit" value="@_localization.GetKey("Kayıt Ol")" class="btn btn-primary" />
     </div>
 </form>

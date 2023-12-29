@@ -1,116 +1,110 @@
 @model AspWebProgram.Models.RegisterDoktorModel
 
 @{
-    ViewData["Title"] = "Doktor Kayıt";
+ViewData["Title"] = "Doktor Kayıt";
 }
-
-<h2>Doktor Kayıt Formu</h2>
 
 <form method="post" asp-controller="Doktor" asp-action="Register">
     <div class="form-group">
-        <label asp-for="DoktorAd">Adı:</label>
+        <label asp-for="DoktorAd">@_localization.GetKey("Adı"):</label>
         <input asp-for="DoktorAd" class="form-control" />
         <span asp-validation-for="DoktorAd" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="DoktorSoyad">Soyadı:</label>
+        <label asp-for="DoktorSoyad">@_localization.GetKey("Soyadı"):</label>
         <input asp-for="DoktorSoyad" class="form-control" />
         <span asp-validation-for="DoktorSoyad" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="DoktorTc">TC Kimlik Numarası:</label>
+        <label asp-for="DoktorTc">@_localization.GetKey("TC Kimlik Numarası"):</label>
         <input asp-for="DoktorTc" class="form-control" />
         <span asp-validation-for="DoktorTc" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="DoktorCinsiyet">Cinsiyet:</label>
+        <label asp-for="DoktorCinsiyet">@_localization.GetKey("Cinsiyet"):</label>
         <select asp-for="DoktorCinsiyet" class="form-control">
-            <option value="Erkek">Erkek</option>
-            <option value="Kadın">Kadın</option>
+            <option value="">@_localization.GetKey("Cinsiyet Seçiniz")</option>
+            <option value="Erkek">@_localization.GetKey("Erkek")</option>
+            <option value="Kadın">@_localization.GetKey("Kadın")</option>
         </select>
         <span asp-validation-for="DoktorCinsiyet" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Password">Şifre:</label>
+        <label asp-for="Password">@_localization.GetKey("Şifre"):</label>
         <input asp-for="Password" type="password" class="form-control" />
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="ConfirmPassword">Şifre Tekrarı:</label>
+        <label asp-for="ConfirmPassword">@_localization.GetKey("Şifre Doğrula"):</label>
         <input asp-for="ConfirmPassword" type="password" class="form-control" />
         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="DoktorBrans">Branşı:</label>
-        <input asp-for="DoktorBrans" class="form-control" />
+        <label asp-for="DoktorBrans">@_localization.GetKey("Branş"):</label>
+        <select asp-for="DoktorBrans" class="form-control">
+            <option value=""></option>
+            <option value="Uzman">@_localization.GetKey("Uzman")</option>
+            <option value="Doçent">@_localization.GetKey("Doçent")</option>
+            <option value="Pratisyen">@_localization.GetKey("Pratisyen")</option>
+            <option value="Profesör">@_localization.GetKey("Profesör")</option>
+        </select>
         <span asp-validation-for="DoktorBrans" class="text-danger"></span>
     </div>
-    
+
     <div class="form-group">
-        <label for="SelectedAnaBilimId">Ana Bilim Seçin:</label>
+        <label for="SelectedAnaBilimId">@_localization.GetKey("Ana Bilim Seçiniz"):</label>
         <select class="form-control" id="SelectedAnaBilimId" asp-for="SelectedAnaBilimId" name="SelectedAnaBilimId">
-            <option value="">Seçiniz</option>
-            <option value="Temel Tıp">Temel Tıp</option>
-            <option value="Dahili Tıp">Dahili Tıp</option>
-            <option value="Cerrahi Tıp">Cerrahi Tıp</option>
+            <option value=""></option>
+            <option value="Temel Tıp">@_localization.GetKey("Temel Tıp")</option>
+            <option value="Dahili Tıp">@_localization.GetKey("Dahili Tıp")</option>
+            <option value="Cerrahi Tıp">@_localization.GetKey("Cerrahi Tıp")</option>
         </select>
     </div>
 
     <div class="form-group">
-        <label for="SelectedPoliklinikId">Poliklinik Seçin:</label>
-        <select class="form-control" id="SelectedPoliklinikId" asp-for="SelectedPoliklinikId" name="SelectedPoliklinikId">
-            <option value="">Seçiniz</option>
+        <label for="SelectedPoliklinikId">@_localization.GetKey("Poliklinik Seçiniz"):</label>
+        <select class="form-control" id="SelectedPoliklinikId" asp-for="SelectedPoliklinikId"
+            name="SelectedPoliklinikId">
+            <option value=""></option>
         </select>
     </div>
-    
-    <button type="submit" class="btn btn-primary">Kaydet</button>
+
+    <button type="submit" class="btn btn-primary">@_localization.GetKey("Kaydet")</button>
 </form>
 
 <script>
     $(function () {
+        var anatomiText = '@_localization.GetKey("Anatomi")';
+        var fizyolojiText = '@_localization.GetKey("Fizyoloji")';
+        var histolojiText = '@_localization.GetKey("Histoloji")';
+        var acilTipText = '@_localization.GetKey("Acil")';
+        var kardiyolojiText = '@_localization.GetKey("Kardiyoloji")';
+        var radyolojiText = '@_localization.GetKey("Radyoloji")';
+        var beyinVeSinirCerrahisiText = '@_localization.GetKey("Beyin ve Sinir Cerrahisi")';
+        // Temel Tıp, Dahili Tıp, ve Cerrahi Tıp metinleri de benzer şekilde tanımlanmalı.
+
         $("#SelectedAnaBilimId").change(function () {
             var selectedAnaBilim = $(this).val();
             var poliklinikDropdown = $("#SelectedPoliklinikId");
-
             // Poliklinikleri sıfırla
             poliklinikDropdown.empty();
 
-            if (selectedAnaBilim === "Temel Tıp") { // Temel Tıp seçildiğinde
-                poliklinikDropdown.append($('<option>', {
-                    value: "Anatomi",
-                    text: "Anatomi"
-                }));
-                poliklinikDropdown.append($('<option>', {
-                    value: "Fizyoloji",
-                    text: "Fizyoloji"
-                }));
-                poliklinikDropdown.append($('<option>', {
-                    value: "Histoloji",
-                    text: "Histoloji"
-                }));
+            // Temel Tıp seçildiğinde
+            if (selectedAnaBilim === "Temel Tıp") {
+                poliklinikDropdown.append($('<option>', { value: "Anatomi", text: anatomiText }));
+                poliklinikDropdown.append($('<option>', { value: "Fizyoloji", text: fizyolojiText }));
+                poliklinikDropdown.append($('<option>', { value: "Histoloji", text: histolojiText }));
             } else if (selectedAnaBilim === "Dahili Tıp") { // Dahili Tıp seçildiğinde
-                poliklinikDropdown.append($('<option>', {
-                    value: "Acil Tıp",
-                    text: "Acil Tıp"
-                }));
-                poliklinikDropdown.append($('<option>', {
-                    value: "Kardiyoloji",
-                    text: "Kardiyoloji"
-                }));
-                poliklinikDropdown.append($('<option>', {
-                    value: "Radyoloji",
-                    text: "Radyoloji"
-                }));
+                poliklinikDropdown.append($('<option>', { value: "Acil Tıp", text: acilTipText }));
+                poliklinikDropdown.append($('<option>', { value: "Kardiyoloji", text: kardiyolojiText }));
+                poliklinikDropdown.append($('<option>', { value: "Radyoloji", text: radyolojiText }));
             } else if (selectedAnaBilim === "Cerrahi Tıp") { // Cerrahi Tıp seçildiğinde
-                poliklinikDropdown.append($('<option>', {
-                    value: "Beyin ve Sinir Cerrahisi",
-                    text: "Beyin ve Sinir Cerrahisi"
-                }));
+                poliklinikDropdown.append($('<option>', { value: "Beyin ve Sinir Cerrahisi", text: beyinVeSinirCerrahisiText }));
             }
         });
     });

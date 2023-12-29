@@ -4,18 +4,18 @@
         ViewData["Title"] = "Doktorlar Listesi";
     }
     
-    <h2>Doktorlar Listesi</h2>
+    <h2>@_localization.GetKey("Doktorlar Listesi")</h2>
     
     <table class="table">
         <thead>
             <tr>
-                <th>Doktor Adı</th>
-                <th>Soyadı</th>
-                <th>DoktorTC</th>
-                <th>Cinsiyet</th>
-                <th>Branş</th>
-                <th>Ana Bilim</th>
-                <th>Poliklinik</th>
+                <th>@_localization.GetKey("Adı")</th>
+                <th>@_localization.GetKey("Soyadı")</th>
+                <th>@_localization.GetKey("TC Kimlik Numarası")</th>
+                <th>@_localization.GetKey("Cinsiyet")</th>
+                <th>@_localization.GetKey("Branş")</th>
+                <th>@_localization.GetKey("Ana Bilim")</th>
+                <th>@_localization.GetKey("Poliklinik")</th>
 
             </tr>
         </thead>
@@ -26,15 +26,14 @@
                 <td>@doktor.DoktorAd</td>
                 <td>@doktor.DoktorSoyad</td>
                 <td>@doktor.DoktorTc</td>
-                <td>@doktor.DoktorCinsiyet</td>
-                <td>@doktor.DoktorBrans</td>
-                <td>@doktor.DoktorAnaBilim</td>
-                <td>@doktor.DoktorPoliklinik</td>
+                <td>@_localization.GetKey(doktor.DoktorCinsiyet)</td>
+                <td>@_localization.GetKey(doktor.DoktorBrans)</td>
+                <td>@_localization.GetKey(doktor.DoktorAnaBilim)</td>
+                <td>@_localization.GetKey(doktor.DoktorPoliklinik)</td>
                 <td>
-                    <a asp-controller="Doktor" asp-action="Edit" asp-route-id="@doktor.DoktorId" class="btn btn-primary">Edit</a>
-                    <a class="btn btn-danger" href="javascript:void(0)" onclick="confirmDelete('@doktor.DoktorId')">Delete</a>
+                    <a asp-controller="Doktor" asp-action="Edit" asp-route-id="@doktor.DoktorId" class="btn btn-primary">@_localization.GetKey("Düzenle")</a>
+                    <a class="btn btn-danger" href="javascript:void(0)" onclick="confirmDelete('@doktor.DoktorId')">@_localization.GetKey("Sil")</a>
                 </td>
-                <!-- Diğer veriler -->
             </tr>
         }
         </tbody>

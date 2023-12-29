@@ -134,3 +134,12 @@ C:\Users\gurka\OneDrive\Masaüstü\WebProgramming-cf3903155af5353db5f888767916e6
 C:\Users\gurka\OneDrive\Masaüstü\WebProgramming-cf3903155af5353db5f888767916e6fdbc7ec873\obj\Debug\net6.0\AspWebProgram.pdb
 C:\Users\gurka\OneDrive\Masaüstü\WebProgramming-cf3903155af5353db5f888767916e6fdbc7ec873\obj\Debug\net6.0\AspWebProgram.genruntimeconfig.cache
 C:\Users\gurka\OneDrive\Masaüstü\WebProgramming-cf3903155af5353db5f888767916e6fdbc7ec873\obj\Debug\net6.0\ref\AspWebProgram.dll
+C:\Users\gurka\OneDrive\Masaüstü\AspWebProgram\obj\Debug\net6.0\AspWebProgram.csproj.GenerateResource.cache
+C:\Users\gurka\OneDrive\Masaüstü\AspWebProgram\obj\Debug\net6.0\AspWebProgram.Resources.SharedResource.en-US.resources
+C:\Users\gurka\OneDrive\Masaüstü\AspWebProgram\bin\Debug\net6.0\en-US\AspWebProgram.resources.dll
+C:\Users\gurka\OneDrive\Masaüstü\AspWebProgram\bin\Debug\net6.0\tr-TR\AspWebProgram.resources.dll
+C:\Users\gurka\OneDrive\Masaüstü\AspWebProgram\obj\Debug\net6.0\AspWebProgram.Resources.SharedResource.tr-TR.resources
+C:\Users\gurka\OneDrive\Masaüstü\AspWebProgram\obj\Debug\net6.0\en-US\AspWebProgram.resources.cs
+C:\Users\gurka\OneDrive\Masaüstü\AspWebProgram\obj\Debug\net6.0\en-US\AspWebProgram.resources.dll
+C:\Users\gurka\OneDrive\Masaüstü\AspWebProgram\obj\Debug\net6.0\tr-TR\AspWebProgram.resources.cs
+C:\Users\gurka\OneDrive\Masaüstü\AspWebProgram\obj\Debug\net6.0\tr-TR\AspWebProgram.resources.dll

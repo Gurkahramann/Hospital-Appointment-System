@@ -4,15 +4,14 @@
         ViewData["Title"] = "Randevu Listesi";
     }
     
-    <h2>Randevu Listesi</h2>
     
     <table class="table">
         <thead>
             <tr>
-                <th>Doktor Adı</th>
-                <th>Hasta Adı</th>
-                <th>Randevu Tarihi</th>
-                <th>Randevu Saati</th>
+                <th>@_localization.GetKey("Doktor Adı")</th>
+                <th>@_localization.GetKey("Adı")</th>
+                <th>@_localization.GetKey("Randevu Tarihi")</th>
+                <th>@_localization.GetKey("Randevu Saati")</th>
                 <!-- Diğer sütun başlıkları ekle -->
             </tr>
         </thead>
@@ -25,10 +24,9 @@
                     <td>@randevu.RandevuTarih.ToString("dd.MM.yyyy")</td>
                     <td>@randevu.RandevuSaati.ToString(@"hh\:mm")</td>
                     <td>
-                        <a asp-controller="Randevu" asp-action="Edit" asp-route-id="@randevu.RandevuId" class="btn btn-primary">Edit</a>
-                        <a class="btn btn-danger" href="javascript:void(0)" onclick="confirmDelete('@randevu.RandevuId')">Delete</a>
+                        <a asp-controller="Randevu" asp-action="Edit" asp-route-id="@randevu.RandevuId" class="btn btn-primary">@_localization.GetKey("Düzenle")</a>
+                        <a class="btn btn-danger" href="javascript:void(0)" onclick="confirmDelete('@randevu.RandevuId')">@_localization.GetKey("Delete")</a>
                     </td>
-                    <!-- Diğer sütunları ekle -->
                 </tr>
                
             }

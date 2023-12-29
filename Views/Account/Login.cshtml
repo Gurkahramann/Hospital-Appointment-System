@@ -14,18 +14,15 @@
 
         <form asp-controller="Account" asp-action="Login" method="post">
           <div class="form-group">
-            <input type="text" id="username" class="form-control" asp-for="Username" placeholder="Username">
+            <input type="text" id="username" class="form-control" asp-for="Username" placeholder="@_localization.GetKey("Kullanıcı Adı")">
           </div>
           <div class="form-group">
-            <input type="password" id="password" class="form-control" asp-for="Password" placeholder="Password">
+            <input type="password" id="password" class="form-control" asp-for="Password" placeholder="@_localization.GetKey("Şifre")">
           </div>
           <div class="form-group">
-            <input type="submit" class="btn btn-primary btn-block" value="Log In">
+            <input type="submit" class="btn btn-primary btn-block" value="@_localization.GetKey("Giriş Yap")">
           </div>
         </form>
-        <div id="formFooter" class="mt-2">
-          <a class="underlineHover" href="#">Forgot Password?</a>
-        </div>
       </div>
     </div>
   </div>

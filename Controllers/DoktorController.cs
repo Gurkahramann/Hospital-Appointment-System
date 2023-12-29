@@ -74,6 +74,7 @@ namespace Controllers
             }
             if (ModelState.IsValid)
             {
+                doktor.Rol="Doktor";
                 db.Update(doktor);
                 db.SaveChanges();
                 return RedirectToAction(nameof(Index));

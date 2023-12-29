@@ -4,16 +4,16 @@
         ViewData["Title"] = "Hastalar Listesi";
     }
     
-    <h2>Hastalar Listesi</h2>
+
     
     <table class="table">
         <thead>
             <tr>
-                <th>TC Kimlik No</th>
-                <th>Ad</th>
-                <th>Soyad</th>
-                <th>Telefon</th>
-                <th>Eposta</th>
+                <th>@_localization.GetKey("TC Kimlik Numarası")</th>
+                <th>@_localization.GetKey("Adı")</th>
+                <th>@_localization.GetKey("Soyadı")</th>
+                <th>@_localization.GetKey("Telefon Numarası")</th>
+                <th>@_localization.GetKey("E-Posta")</th>
 
             </tr>
         </thead>
@@ -27,8 +27,8 @@
                 <td>@hasta.HastaTel</td>
                 <td>@hasta.HastaEposta</td>
                 <td>
-                    <a asp-controller="Hasta" asp-action="Edit" asp-route-id="@hasta.HastaId" class="btn btn-primary">Edit</a>
-                    <a class="btn btn-danger" href="javascript:void(0)" onclick="confirmDelete('@hasta.HastaId')">Delete</a>
+                    <a asp-controller="Hasta" asp-action="Edit" asp-route-id="@hasta.HastaId" class="btn btn-primary">@_localization.GetKey("Düzenle")</a>
+                    <a class="btn btn-danger" href="javascript:void(0)" onclick="confirmDelete('@hasta.HastaId')">@_localization.GetKey("Sil")</a>
                 </td>
                 <!-- Diğer veriler -->
             </tr>
