@@ -78,6 +78,41 @@
         var kardiyolojiText = '@_localization.GetKey("Kardiyoloji")';
         var radyolojiText = '@_localization.GetKey("Radyoloji")';
         var beyinVeSinirCerrahisiText = '@_localization.GetKey("Beyin ve Sinir Cerrahisi")';
+
+        $("#DoktorAnaBilim").change(function () {
+            var selectedAnaBilim = $(this).val();
+            var poliklinikDropdown = $("#DoktorPoliklinik"); // ID burada düzeltilmiştir
+            // Poliklinikleri sıfırla
+            poliklinikDropdown.empty();
+
+            // Temel Tıp seçildiğinde
+            if (selectedAnaBilim === "Temel Tıp") {
+                poliklinikDropdown.append($('<option>', { value: "Anatomi", text: anatomiText }));
+                poliklinikDropdown.append($('<option>', { value: "Fizyoloji", text: fizyolojiText }));
+                poliklinikDropdown.append($('<option>', { value: "Histoloji", text: histolojiText }));
+            } else if (selectedAnaBilim === "Dahili Tıp") { // Dahili Tıp seçildiğinde
+                poliklinikDropdown.append($('<option>', { value: "Acil Tıp", text: acilTipText }));
+                poliklinikDropdown.append($('<option>', { value: "Kardiyoloji", text: kardiyolojiText }));
+                poliklinikDropdown.append($('<option>', { value: "Radyoloji", text: radyolojiText }));
+            } else if (selectedAnaBilim === "Cerrahi Tıp") { // Cerrahi Tıp seçildiğinde
+                poliklinikDropdown.append($('<option>', { value: "Beyin ve Sinir Cerrahisi", text: beyinVeSinirCerrahisiText }));
+            }
+        });
+
+        // Doktor edit sayfası yüklendiğinde mevcut Ana Bilim dalına göre Poliklinik dropdown'ını başlat
+        $("#DoktorAnaBilim").trigger("change");
+    });
+</script>
+
+<!-- <script>
+    $(function () {
+        var anatomiText = '@_localization.GetKey("Anatomi")';
+        var fizyolojiText = '@_localization.GetKey("Fizyoloji")';
+        var histolojiText = '@_localization.GetKey("Histoloji")';
+        var acilTipText = '@_localization.GetKey("Acil")';
+        var kardiyolojiText = '@_localization.GetKey("Kardiyoloji")';
+        var radyolojiText = '@_localization.GetKey("Radyoloji")';
+        var beyinVeSinirCerrahisiText = '@_localization.GetKey("Beyin ve Sinir Cerrahisi")';
         // Temel Tıp, Dahili Tıp, ve Cerrahi Tıp metinleri de benzer şekilde tanımlanmalı.
 
         $("#SelectedAnaBilimId").change(function () {
@@ -100,4 +135,4 @@
             }
         });
     });
-</script>
+</script> -->

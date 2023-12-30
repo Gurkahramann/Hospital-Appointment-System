@@ -333,4 +333,8 @@
     <value>Choose Time</value>
     <comment/>
   </data>
+  <data name="Hasta Ekle" xml:space="preserve">
+    <value>Add Patient</value>
+    <comment/>
+  </data>
 </root>

@@ -1,6 +1,14 @@
 ﻿@{
     Layout = "_Layout";
 }
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+var username = HttpContextAccessor.HttpContext.Session.GetString("Username");
+bool isLoggedIn = !string.IsNullOrEmpty(username);
+var userRole = HttpContextAccessor.HttpContext.Session.GetString("UserRole");
+ViewData["UserRole"] = userRole;
+}
 <ul class="nav navbar-nav">
     <!-- <li>@Html.ActionLink("Home", "Index", "Home")</li>
     <li>@Html.ActionLink("Privacy", "Privacy", "Home")</li>

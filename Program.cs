@@ -1,10 +1,14 @@
 using System.Globalization;
 using System.Reflection;
+using System.Text;
 using AspWebProgram.Services;
 using AspWebProgramming.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,7 +48,32 @@ builder.Services.AddDbContext<DataContext>(options =>{
     var connectionString=config.GetConnectionString("database");
     options.UseSqlServer(connectionString);
 });
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+{
+    options.LoginPath = "/Users/SignIn";
+})
+.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+    };
+});
+builder.Services.ConfigureApplicationCookie(options=>{
+    options.LoginPath="/Account/Login";
+    //options.AccessDeniedPath="/Account/AccessDenied";
+});
+
 var app = builder.Build();
+
 // async Task SeedAnaBilimAndPoliklinikData(IServiceProvider serviceProvider)
 // {
 //     using (var scope = serviceProvider.CreateScope())
@@ -98,7 +127,7 @@ app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocal
 app.UseRouting();
 
 app.UseAuthorization();
-
+app.UseAuthentication();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

@@ -1,11 +1,11 @@
 @model IEnumerable<AspWebProgramming.Data.Doktor>
 
     @{
-        ViewData["Title"] = "Doktorlar Listesi";
+    ViewData["Title"] = "Doktorlar Listesi";
     }
-    
+
     <h2>@_localization.GetKey("Doktorlar Listesi")</h2>
-    
+
     <table class="table">
         <thead>
             <tr>
@@ -20,8 +20,8 @@
             </tr>
         </thead>
         <tbody>
-        @foreach (var doktor in Model)
-        {
+            @foreach (var doktor in Model)
+            {
             <tr>
                 <td>@doktor.DoktorAd</td>
                 <td>@doktor.DoktorSoyad</td>
@@ -31,20 +31,25 @@
                 <td>@_localization.GetKey(doktor.DoktorAnaBilim)</td>
                 <td>@_localization.GetKey(doktor.DoktorPoliklinik)</td>
                 <td>
-                    <a asp-controller="Doktor" asp-action="Edit" asp-route-id="@doktor.DoktorId" class="btn btn-primary">@_localization.GetKey("Düzenle")</a>
-                    <a class="btn btn-danger" href="javascript:void(0)" onclick="confirmDelete('@doktor.DoktorId')">@_localization.GetKey("Sil")</a>
+                    @if (ViewData["UserRole"] as string == "Admin" || ViewData["UserRole"] as string == "Doktor")
+                    {
+                    <a asp-controller="Doktor" asp-action="Edit" asp-route-id="@doktor.DoktorId"
+                        class="btn btn-primary">@_localization.GetKey("Düzenle")</a>
+                    <a class="btn btn-danger" href="javascript:void(0)"
+                        onclick="confirmDelete('@doktor.DoktorId')">@_localization.GetKey("Sil")</a>
+                    }
+
                 </td>
             </tr>
-        }
+            }
         </tbody>
     </table>
     @section Scripts {
-        <script>
-            function confirmDelete(id) {
-                if(confirm("Bu hastayı silmek istediğinize emin misiniz?")) {
-                    window.location.href = '/Doktor/Delete/' + id;
-                }
+    <script>
+        function confirmDelete(id) {
+            if (confirm("Bu hastayı silmek istediğinize emin misiniz?")) {
+                window.location.href = '/Doktor/Delete/' + id;
             }
-        </script>
+        }
+    </script>
     }
-    

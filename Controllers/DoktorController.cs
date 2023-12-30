@@ -2,6 +2,10 @@ using AspWebProgramming.Data;
 using Microsoft.AspNetCore.Mvc;
 using AspWebProgram.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Controllers
 {
@@ -19,6 +23,11 @@ namespace Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterDoktorModel model)
         {
+            var userRole = HttpContext.Session.GetString("UserRole");
+            if(userRole!="Admin")
+            {
+                return Unauthorized();
+            }
             if (ModelState.IsValid)
             {
                 // Veritabanına doktor kaydını eklemek için modeli kullanabilirsiniz.
@@ -34,6 +43,19 @@ namespace Controllers
                     DoktorPoliklinik = model.SelectedPoliklinikId.ToString(), // Seçilen Poliklinik Id'sini string olarak ayarla
                     Rol = "Doktor"
                 };
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Role, "Doktor"), // veya "Doktor", "Admin" gibi kullanıcının rolü.
+                 };
+                var claimsIdentity = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                // Kullanıcıyı oturum açtır.
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    claimsPrincipal);
+
                 var anaBilim = new AnaBilim()
                 {
                     AnaBilimAd = model.SelectedAnaBilimId
@@ -56,8 +78,14 @@ namespace Controllers
             return View(model);
         }
         [HttpGet]
+        //[Authorize(Roles = "Admin,Doktor")]
         public IActionResult Edit(int id)
         {
+            var userRole = HttpContext.Session.GetString("UserRole");
+            if(userRole!="Admin"||userRole!="Doktor")
+            {
+                return Unauthorized();
+            }
             var doktor = db.Doktorlar.Find(id);
             if (doktor == null)
             {
@@ -68,13 +96,18 @@ namespace Controllers
         [HttpPost]
         public IActionResult Edit(int id, Doktor doktor)
         {
+            var userRole = HttpContext.Session.GetString("UserRole");
+            if(userRole!="Admin"||userRole!="Doktor")
+            {
+                return Unauthorized();
+            }
             if (id != doktor.DoktorId)
             {
                 return NotFound();
             }
             if (ModelState.IsValid)
             {
-                doktor.Rol="Doktor";
+                doktor.Rol = "Doktor";
                 db.Update(doktor);
                 db.SaveChanges();
                 return RedirectToAction(nameof(Index));
@@ -83,6 +116,11 @@ namespace Controllers
         }
         public IActionResult Delete(int id)
         {
+            var userRole = HttpContext.Session.GetString("UserRole");
+            if(userRole!="Admin")
+            {
+                return Unauthorized();
+            }
             var doktor = db.Doktorlar.Find(id);
             if (doktor != null)
             {
@@ -134,9 +172,15 @@ namespace Controllers
 
         //     return View(model);
         // }
+
+        [HttpGet]
         public ActionResult Register()
         {
-
+            var userRole = HttpContext.Session.GetString("UserRole");
+            if (userRole != "Admin")
+            {
+                return Unauthorized(); 
+            }
             return View();
         }
 

@@ -143,3 +143,5 @@ C:\Users\gurka\OneDrive\Masaüstü\AspWebProgram\obj\Debug\net6.0\en-US\AspWebPr
 C:\Users\gurka\OneDrive\Masaüstü\AspWebProgram\obj\Debug\net6.0\en-US\AspWebProgram.resources.dll
 C:\Users\gurka\OneDrive\Masaüstü\AspWebProgram\obj\Debug\net6.0\tr-TR\AspWebProgram.resources.cs
 C:\Users\gurka\OneDrive\Masaüstü\AspWebProgram\obj\Debug\net6.0\tr-TR\AspWebProgram.resources.dll
+C:\Users\gurka\OneDrive\Masaüstü\AspWebProgram\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\gurka\OneDrive\Masaüstü\AspWebProgram\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
