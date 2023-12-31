@@ -176,6 +176,7 @@ namespace Controllers
 
             // Herhangi bir ekstra oturum bilgisi varsa, bu da temizlenebilir.
             HttpContext.Session.Clear();
+            
 
             // Anasayfaya yönlendir
             return RedirectToAction("Index", "Home");

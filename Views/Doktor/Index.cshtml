@@ -1,11 +1,75 @@
 @model IEnumerable<AspWebProgramming.Data.Doktor>
 
     @{
-    ViewData["Title"] = "Doktorlar Listesi";
+        if (ViewData["UserRole"] as string == "Doktor" )
+        {
+            ViewData["Title"] = "Profil Ayarları";
+        }
+        else
+        {
+            ViewData["Title"] = "Doktorlar Listesi";
+        }
+    
     }
 
-    <h2>@_localization.GetKey("Doktorlar Listesi")</h2>
+    <h2>@_localization.GetKey(ViewData["Title"] as string)</h2>
 
+    <style>
+        body{
+            background-color:#1a4d87;
+        }
+        .table {
+    border-collapse: collapse;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background-color: #ddd;
+}
+
+.table th, .table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.table th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table tr:hover {
+    background-color: #ddd;
+}
+
+.btn-primary {
+    background-color: blue;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+}
+
+.btn-primary:hover {
+    background-color: darkblue;
+}
+
+.btn-danger {
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+}
+
+.btn-danger:hover {
+    background-color: darkred;
+}
+    </style>
     <table class="table">
         <thead>
             <tr>
@@ -35,9 +99,13 @@
                     {
                     <a asp-controller="Doktor" asp-action="Edit" asp-route-id="@doktor.DoktorId"
                         class="btn btn-primary">@_localization.GetKey("Düzenle")</a>
-                    <a class="btn btn-danger" href="javascript:void(0)"
-                        onclick="confirmDelete('@doktor.DoktorId')">@_localization.GetKey("Sil")</a>
+                        @if(ViewData["UserRole"] as string == "Admin")
+                        {
+                            <a class="btn btn-danger" href="javascript:void(0)"
+                            onclick="confirmDelete('@doktor.DoktorId')">@_localization.GetKey("Sil")</a>
+                        }
                     }
+
 
                 </td>
             </tr>

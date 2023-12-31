@@ -3,7 +3,61 @@
 @{
     ViewData["Title"] = "Randevu Düzenle";
 }
+<style>
+   
+body {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    background-color: #1a4d87;
+}
 
+
+form {
+    background: #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    margin: 40px auto;
+}
+
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f8f8;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    font-size: 13px;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+}
+
+
+.btn-primary {
+    background-color: #4CAF50;
+    border: none;
+    padding: 10px 15px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+</style>
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="RandevuId" />
     

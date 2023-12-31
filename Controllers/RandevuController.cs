@@ -22,7 +22,10 @@ namespace Controllers
         {
             var userRole = HttpContext.Session.GetString("UserRole");
             var loginName = HttpContext.Session.GetString("LoginName");
-
+           if (userRole != "Admin" && userRole != "Hasta" &&userRole!="Doktor")
+            {
+                return Unauthorized();
+            }
             IQueryable<Randevu> query = dbcontext.Randevular
                 .Include(x => x.Doktor)
                 .Include(x => x.Hasta);
@@ -55,7 +58,11 @@ namespace Controllers
         {
             var userRole = HttpContext.Session.GetString("UserRole");
             var loginName = HttpContext.Session.GetString("LoginName");
-
+            ViewBag.Hastalar = new SelectList(await dbcontext.Hastalar.ToListAsync(), "HastaId", "HastaAd");
+            if (userRole != "Admin" && userRole != "Hasta")
+            {
+                return Unauthorized();
+            }
             if (userRole == "Hasta")
             {
                 var hasta = await dbcontext.Hastalar.FirstOrDefaultAsync(h => h.HastaTc == loginName);
@@ -65,7 +72,7 @@ namespace Controllers
 
                 }
             }
-            else
+            else if(userRole=="Admin")
             {
                 ViewBag.Hastalar = new SelectList(await dbcontext.Hastalar.ToListAsync(), "HastaId", "HastaAd");
             }
@@ -176,7 +183,7 @@ namespace Controllers
         public async Task<IActionResult> RandevuOlustur(Randevu model)
         {
             var userRole = HttpContext.Session.GetString("UserRole");
-            if (userRole != "Admin" || userRole != "Hasta")
+            if (userRole != "Admin" && userRole != "Hasta")
             {
                 return Unauthorized();
             }
@@ -210,7 +217,7 @@ namespace Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var userRole = HttpContext.Session.GetString("UserRole");
-            if (userRole != "Admin" || userRole != "Hasta")
+            if (userRole != "Admin" && userRole != "Hasta")
             {
                 return Unauthorized();
             }
@@ -229,6 +236,9 @@ namespace Controllers
                     ViewBag.Hastalar = new SelectList(new List<Hasta> { hasta }, "HastaId", "HastaAd", randevu.RandevuId);
 
                 }
+            }
+            else{
+                ViewBag.Hastalar = new SelectList(dbcontext.Hastalar, "HastaId", "HastaAd", randevu.HastaId);
             }
             if (randevu == null)
             {
@@ -254,7 +264,7 @@ namespace Controllers
         public IActionResult Edit(int id, RandevuEditViewModel viewModel)
         {
             var userRole = HttpContext.Session.GetString("UserRole");
-            if (userRole != "Admin" || userRole != "Hasta")
+            if (userRole != "Admin" && userRole != "Hasta")
             {
                 return Unauthorized();
             }
@@ -288,7 +298,7 @@ namespace Controllers
         public IActionResult Delete(int id)
         {
             var userRole = HttpContext.Session.GetString("UserRole");
-            if (userRole != "Admin" || userRole != "Hasta")
+           if (userRole != "Admin" && userRole != "Hasta")
             {
                 return Unauthorized();
             }

@@ -18,13 +18,18 @@ namespace Controllers
         }
         public async Task<IActionResult> Index()
         {
+            var userRole = HttpContext.Session.GetString("UserRole");
+            if (userRole != "Hasta" && userRole != "Doktor" && userRole != "Admin")
+            {
+                return Unauthorized();
+            }
             return View(await db.Doktorlar.ToListAsync());
         }
         [HttpPost]
         public async Task<IActionResult> Register(RegisterDoktorModel model)
         {
             var userRole = HttpContext.Session.GetString("UserRole");
-            if(userRole!="Admin")
+            if (userRole != "Admin")
             {
                 return Unauthorized();
             }
@@ -82,7 +87,7 @@ namespace Controllers
         public IActionResult Edit(int id)
         {
             var userRole = HttpContext.Session.GetString("UserRole");
-            if(userRole!="Admin"||userRole!="Doktor")
+            if (userRole != "Admin" && userRole != "Doktor")
             {
                 return Unauthorized();
             }
@@ -97,7 +102,7 @@ namespace Controllers
         public IActionResult Edit(int id, Doktor doktor)
         {
             var userRole = HttpContext.Session.GetString("UserRole");
-            if(userRole!="Admin"||userRole!="Doktor")
+            if (userRole != "Admin" && userRole != "Doktor")
             {
                 return Unauthorized();
             }
@@ -117,7 +122,7 @@ namespace Controllers
         public IActionResult Delete(int id)
         {
             var userRole = HttpContext.Session.GetString("UserRole");
-            if(userRole!="Admin")
+            if (userRole != "Admin")
             {
                 return Unauthorized();
             }
@@ -179,7 +184,7 @@ namespace Controllers
             var userRole = HttpContext.Session.GetString("UserRole");
             if (userRole != "Admin")
             {
-                return Unauthorized(); 
+                return Unauthorized();
             }
             return View();
         }

@@ -15,7 +15,10 @@ public class HastaController : Controller
     {
         var userRole = HttpContext.Session.GetString("UserRole");
         var loginName = HttpContext.Session.GetString("LoginName");
-
+        if(userRole!="Hasta" && userRole!="Doktor" && userRole!="Admin" )
+        {
+             return Unauthorized();
+        }
         if (userRole == "Hasta")
         {
             // Sadece giriş yapan hasta kullanıcısının bilgilerini getir
@@ -66,7 +69,7 @@ public class HastaController : Controller
     public IActionResult Edit(int id)
     {
         var userRole = HttpContext.Session.GetString("UserRole");
-        if (userRole != "Admin" || userRole != "Hasta")
+        if (userRole != "Admin" && userRole != "Hasta")
         {
             return Unauthorized();
         }
@@ -81,7 +84,7 @@ public class HastaController : Controller
     public IActionResult Edit(int id, Hasta hasta)
     {
         var userRole = HttpContext.Session.GetString("UserRole");
-        if (userRole != "Admin" || userRole != "Hasta")
+        if (userRole != "Admin" && userRole != "Hasta")
         {
             return Unauthorized();
         }

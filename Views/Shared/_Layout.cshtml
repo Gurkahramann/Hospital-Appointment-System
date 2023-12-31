@@ -57,7 +57,7 @@ ViewData["UserRole"] = userRole;
                         {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Doktor"
-                                asp-action="Index">@_localization.GetKey("Doktorları Listele")</a>
+                                asp-action="Index">@_localization.GetKey("Profil Ayarları")</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Randevu"
@@ -94,18 +94,7 @@ ViewData["UserRole"] = userRole;
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Doktor" asp-action="Register">@_localization.GetKey("Doktor Ekle")</a>
                             </li> 
                         }
-
                         }
-                        <!-- <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Randevu" asp-action="IndexRandevu">@_localization.GetKey("Randevu Listele")</a>
-                        </li> -->
-                        <!-- <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Randevu" asp-action="RandevuOlustur">@_localization.GetKey("Randevu Oluştur")</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Doktor" asp-action="Register">@_localization.GetKey("Doktor Ekle")</a>
-                        </li> -->
-
                         @if (!isLoggedIn)
                         {
                         <li class="nav-item">
@@ -122,10 +111,6 @@ ViewData["UserRole"] = userRole;
                         </li>
 
                         }
-                        <!-- <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Hasta"
-                                asp-action="Index">@_localization.GetKey("Hastaları Listele")</a>
-                        </li> -->
                         @if (!string.IsNullOrEmpty(username))
                         {
                         <li class="nav-item">
@@ -188,19 +173,14 @@ ViewData["UserRole"] = userRole;
 @RenderSection("Scripts", required: false)
 <script>
     $(document).ready(function () {
-        // Dil seçimi için event handler tanımla
         $('.dropdown-menu .dropdown-item').on('click', function () {
             var selectedLanguage = $(this).text();
-            // Buton metnini seçilen dil ile güncelle
             $('.dropdown-toggle').text(selectedLanguage);
-            // Seçimi localStorage'a kaydet
             localStorage.setItem('selectedLanguage', selectedLanguage);
         });
 
-        // Sayfa yüklendiğinde, daha önce seçilmiş dili kontrol et
         var savedLanguage = localStorage.getItem('selectedLanguage');
         if (savedLanguage) {
-            // Kaydedilmiş dil varsa buton metnini güncelle
             $('.dropdown-toggle').text(savedLanguage);
         }
     });

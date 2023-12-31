@@ -337,4 +337,8 @@
     <value>Add Patient</value>
     <comment/>
   </data>
+  <data name="Profil Ayarları" xml:space="preserve">
+    <value>Profile Settings</value>
+    <comment>test2</comment>
+  </data>
 </root>

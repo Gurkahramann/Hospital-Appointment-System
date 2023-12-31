@@ -7,25 +7,53 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-6 offset-md-3">
-      <div class="text-center">
+<style>
+  body{
+    background-color: #1a4d87;
+  }
+    .login-container {
+        margin-top: 5%;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color:#ddd;
+        padding: 20px;
+    }
 
-        <form asp-controller="Account" asp-action="Login" method="post">
-          <div class="form-group">
-            <input type="text" id="username" class="form-control" asp-for="Username" placeholder="@_localization.GetKey("Kullanıcı Adı")">
-          </div>
-          <div class="form-group">
-            <input type="password" id="password" class="form-control" asp-for="Password" placeholder="@_localization.GetKey("Şifre")">
-          </div>
-          <div class="form-group">
-            <input type="submit" class="btn btn-primary btn-block" value="@_localization.GetKey("Giriş Yap")">
-          </div>
-        </form>
-      </div>
+    .login-title {
+        margin-bottom: 20px;
+        font-size: 2em;
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    .btn-login {
+        background: #4CAF50;
+        color: white;
+        font-weight: bold;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3 login-container">
+            <div class="text-center login-title">
+                Giriş Yap
+            </div>
+
+            <form asp-controller="Account" asp-action="Login" method="post">
+                <div class="form-group">
+                    <input type="text" id="username" class="form-control" asp-for="Username" placeholder="KullaniciAdi">
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" class="form-control" asp-for="Password" placeholder="Sifre">
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-login btn-block" value="GirisYap">
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
 </div>
 
 @section Scripts {

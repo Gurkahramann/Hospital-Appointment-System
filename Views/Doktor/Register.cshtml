@@ -3,6 +3,70 @@
 @{
 ViewData["Title"] = "Doktor Kayıt";
 }
+<style>
+body {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    background-color:#1a4d87 ;
+}
+
+
+h2 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+
+form {
+  
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    margin: 40px auto;
+    background-color:#ddd;
+}
+
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f8f8;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    font-size: 13px;
+}
+
+.form-control:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+}
+
+
+.btn-primary {
+    background-color: #4CAF50;
+    border: none;
+    padding: 10px 15px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #3e8e41;
+}
+
+
+</style>
 
 <form method="post" asp-controller="Doktor" asp-action="Register">
     <div class="form-group">
@@ -86,24 +150,21 @@ ViewData["Title"] = "Doktor Kayıt";
         var kardiyolojiText = '@_localization.GetKey("Kardiyoloji")';
         var radyolojiText = '@_localization.GetKey("Radyoloji")';
         var beyinVeSinirCerrahisiText = '@_localization.GetKey("Beyin ve Sinir Cerrahisi")';
-        // Temel Tıp, Dahili Tıp, ve Cerrahi Tıp metinleri de benzer şekilde tanımlanmalı.
 
         $("#SelectedAnaBilimId").change(function () {
             var selectedAnaBilim = $(this).val();
             var poliklinikDropdown = $("#SelectedPoliklinikId");
-            // Poliklinikleri sıfırla
             poliklinikDropdown.empty();
 
-            // Temel Tıp seçildiğinde
             if (selectedAnaBilim === "Temel Tıp") {
                 poliklinikDropdown.append($('<option>', { value: "Anatomi", text: anatomiText }));
                 poliklinikDropdown.append($('<option>', { value: "Fizyoloji", text: fizyolojiText }));
                 poliklinikDropdown.append($('<option>', { value: "Histoloji", text: histolojiText }));
-            } else if (selectedAnaBilim === "Dahili Tıp") { // Dahili Tıp seçildiğinde
+            } else if (selectedAnaBilim === "Dahili Tıp") { 
                 poliklinikDropdown.append($('<option>', { value: "Acil Tıp", text: acilTipText }));
                 poliklinikDropdown.append($('<option>', { value: "Kardiyoloji", text: kardiyolojiText }));
                 poliklinikDropdown.append($('<option>', { value: "Radyoloji", text: radyolojiText }));
-            } else if (selectedAnaBilim === "Cerrahi Tıp") { // Cerrahi Tıp seçildiğinde
+            } else if (selectedAnaBilim === "Cerrahi Tıp") { 
                 poliklinikDropdown.append($('<option>', { value: "Beyin ve Sinir Cerrahisi", text: beyinVeSinirCerrahisiText }));
             }
         });

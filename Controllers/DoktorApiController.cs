@@ -65,7 +65,6 @@ public class DoktorApiController : ControllerBase
         existingDoktor.DoktorSoyad=doktor.DoktorSoyad;
         existingDoktor.DoktorTc=doktor.DoktorTc;
         existingDoktor.DoktorAd = doktor.DoktorAd;
-        // Diğer alanlar da güncellenebilir...
 
         db.Update(existingDoktor);
         db.SaveChanges();
