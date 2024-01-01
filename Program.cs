@@ -73,47 +73,6 @@ builder.Services.ConfigureApplicationCookie(options=>{
 });
 
 var app = builder.Build();
-
-// async Task SeedAnaBilimAndPoliklinikData(IServiceProvider serviceProvider)
-// {
-//     using (var scope = serviceProvider.CreateScope())
-//     {
-//         var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>(); // DbContext'i uygun şekilde ayarlayın
-
-//         // Önce AnaBilim verilerini ekleyin
-//         if (!dbContext.AnaBilimler.Any())
-//         {
-//             var anaBilimler = new List<AnaBilim>
-//             {
-//                 new AnaBilim { AnaBilimAd = "Temel Tıp" },
-//                 new AnaBilim { AnaBilimAd = "Dahili Tıp" },
-//                 new AnaBilim { AnaBilimAd = "Cerrahi Tıp" }
-//                 // İhtiyaca göre daha fazla ana bilim ekleyebilirsiniz
-//             };
-
-//             await dbContext.AnaBilimler.AddRangeAsync(anaBilimler);
-//             await dbContext.SaveChangesAsync();
-//         }
-
-//         // Şimdi de Poliklinik verilerini ekleyin
-//         if (!dbContext.Poliklinikler.Any())
-//         {
-//             var poliklinikler = new List<Poliklinik>
-//             {
-//                 new Poliklinik { PoliklinikAd = "Anatomi", AnaBilimId = 1 }, // Örnek olarak, AnaBilimId'yi ilgili ana bilim ile ilişkilendirin
-//                 new Poliklinik { PoliklinikAd = "Fizyoloji", AnaBilimId = 1 },
-//                 new Poliklinik { PoliklinikAd = "Acil Tıp", AnaBilimId = 2 },
-//                 new Poliklinik { PoliklinikAd = "Kardiyoloji", AnaBilimId = 2 },
-//                 new Poliklinik { PoliklinikAd = "Beyin ve Sinir Cerrahisi", AnaBilimId = 3 }
-//                 // İhtiyaca göre daha fazla poliklinik ekleyebilirsiniz
-//             };
-
-//             await dbContext.Poliklinikler.AddRangeAsync(poliklinikler);
-//             await dbContext.SaveChangesAsync();
-//         }
-//     }
-// }
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
