@@ -1,10 +1,6 @@
 @model IEnumerable<AspWebProgramming.Data.Randevu>
 
-    @{
-        ViewData["Title"] = "Randevu Listesi";
-    }
-    
-    
+    <link href="~/css/randevucss/randevuindex.css" rel="stylesheet" />
     <table class="table">
         <thead>
             <tr>
@@ -12,32 +8,37 @@
                 <th>@_localization.GetKey("Adı")</th>
                 <th>@_localization.GetKey("Randevu Tarihi")</th>
                 <th>@_localization.GetKey("Randevu Saati")</th>
-                <!-- Diğer sütun başlıkları ekle -->
             </tr>
         </thead>
         <tbody>
             @foreach (var randevu in Model)
             {
-                <tr>
-                    <td>@randevu.Doktor.DoktorAdSoyad</td>
-                    <td>@randevu.Hasta.HastaAd</td>
-                    <td>@randevu.RandevuTarih.ToString("dd.MM.yyyy")</td>
-                    <td>@randevu.RandevuSaati.ToString(@"hh\:mm")</td>
-                    <td>
-                        <a asp-controller="Randevu" asp-action="Edit" asp-route-id="@randevu.RandevuId" class="btn btn-primary">@_localization.GetKey("Düzenle")</a>
-                        <a class="btn btn-danger" href="javascript:void(0)" onclick="confirmDelete('@randevu.RandevuId')">@_localization.GetKey("Delete")</a>
-                    </td>
-                </tr>
-               
+            <tr>
+                <td>@randevu.Doktor.DoktorAdSoyad</td>
+                <td>@randevu.Hasta.HastaAd</td>
+                <td>@randevu.RandevuTarih.ToString("dd.MM.yyyy")</td>
+                <td>@randevu.RandevuSaati.ToString(@"hh\:mm")</td>
+                <td>
+                    @if (ViewData["UserRole"] as string == "Admin" || ViewData["UserRole"] as string == "Hasta")
+                    {
+                    <a asp-controller="Randevu" asp-action="Edit" asp-route-id="@randevu.RandevuId"
+                        class="btn btn-primary">@_localization.GetKey("Düzenle")</a>
+                    <a class="btn btn-danger" href="javascript:void(0)"
+                        onclick="confirmDelete('@randevu.RandevuId')">@_localization.GetKey("Sil")</a>
+                    }
+
+                </td>
+            </tr>
+
             }
         </tbody>
     </table>
     @section Scripts {
-        <script>
-            function confirmDelete(id) {
-                if(confirm("Bu Randevuyu silmek istediğinize emin misiniz?")) {
-                    window.location.href = '/Randevu/Delete/' + id;
-                }
+    <script>
+        function confirmDelete(id) {
+            if (confirm("Bu Randevuyu silmek istediğinize emin misiniz?")) {
+                window.location.href = '/Randevu/Delete/' + id;
             }
-        </script>
+        }
+    </script>
     }

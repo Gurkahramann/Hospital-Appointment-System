@@ -337,4 +337,16 @@
     <value>Add Patient</value>
     <comment/>
   </data>
+  <data name="Profil Ayarları" xml:space="preserve">
+    <value>Profile Settings</value>
+    <comment>test2</comment>
+  </data>
+  <data name="Hastane Randevu Sistemi" xml:space="preserve">
+    <value>Hospital Appointment System</value>
+    <comment>test3</comment>
+  </data>
+  <data name="Hastanemize Hoşgeldiniz Öncelikle Giriş Yapınız.Eğer Hesabınız Yoksa Lütfen Kayıt Olunuz." xml:space="preserve">
+    <value>Welcome to Our Hospital, Firstly Log In. If You Do Not Have An Account, Please Register.</value>
+    <comment>test3</comment>
+  </data>
 </root>

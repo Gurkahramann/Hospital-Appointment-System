@@ -27,18 +27,17 @@
                 <td>@hasta.HastaTel</td>
                 <td>@hasta.HastaEposta</td>
                 <td>
-                    @if (ViewData["UserRole"] as string == "Admin" || ViewData["UserRole"] as string == "Hasta")
+                    @if (ViewData["UserRole"] as string == "Hasta")
+                    {
+                        <a asp-controller="Hasta" asp-action="Edit" asp-route-id="@hasta.HastaId" class="btn btn-primary">@_localization.GetKey("Düzenle")</a>
+                        
+                    }
+                    @if(ViewData["UserRole"] as string == "Admin")
                     {
                         <a asp-controller="Hasta" asp-action="Edit" asp-route-id="@hasta.HastaId" class="btn btn-primary">@_localization.GetKey("Düzenle")</a>
                         <a class="btn btn-danger" href="javascript:void(0)" onclick="confirmDelete('@hasta.HastaId')">@_localization.GetKey("Sil")</a>
                     }
                 </td>
-
-                <!-- <td>
-                    <a asp-controller="Hasta" asp-action="Edit" asp-route-id="@hasta.HastaId" class="btn btn-primary">@_localization.GetKey("Düzenle")</a>
-                    <a class="btn btn-danger" href="javascript:void(0)" onclick="confirmDelete('@hasta.HastaId')">@_localization.GetKey("Sil")</a>
-                </td> -->
-                <!-- Diğer veriler -->
             </tr>
         }
         </tbody>

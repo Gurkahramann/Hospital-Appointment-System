@@ -38,8 +38,8 @@ public class DoktorApiController : ControllerBase
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],  // İssuer değerini güncelleyin
-                audience: _configuration["Jwt:Audience"],  // Audience değerini güncelleyin
+                issuer: _configuration["Jwt:Issuer"],  
+                audience: _configuration["Jwt:Audience"], 
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: creds);
@@ -65,12 +65,11 @@ public class DoktorApiController : ControllerBase
         existingDoktor.DoktorSoyad=doktor.DoktorSoyad;
         existingDoktor.DoktorTc=doktor.DoktorTc;
         existingDoktor.DoktorAd = doktor.DoktorAd;
-        // Diğer alanlar da güncellenebilir...
 
         db.Update(existingDoktor);
         db.SaveChanges();
 
-        return NoContent(); // Başarılı bir güncelleme için NoContent döner
+        return NoContent(); 
     }
 
     [HttpDelete("delete/{id}")]
@@ -85,6 +84,6 @@ public class DoktorApiController : ControllerBase
         db.Doktorlar.Remove(doktor);
         db.SaveChanges();
 
-        return NoContent(); // Başarılı bir silme işlemi için NoContent döner
+        return NoContent(); 
     }
 }

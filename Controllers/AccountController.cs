@@ -5,6 +5,7 @@ using AspWebProgram.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.EntityFrameworkCore;
 
 namespace Controllers
 {
@@ -31,7 +32,6 @@ namespace Controllers
 
                 if (!string.IsNullOrEmpty(currentUsername) && !string.IsNullOrEmpty(currentUserRole))
                 {
-                    // Kullanıcı zaten oturum açmış
                     return Unauthorized();
                 }
                 var adminUser = db.Adminler
@@ -43,12 +43,7 @@ namespace Controllers
                 if (adminUser != null)
                 {
                     HttpContext.Session.SetString("Username", adminUser.KullaniciAdi);
-                    HttpContext.Session.SetString("UserRole", "Admin"); // Örnek bir rol ataması
-                    var claims = new List<Claim>
-                {
-                new Claim(ClaimTypes.Name, model.Username),
-                new Claim(ClaimTypes.Role,"Admin")
-                };
+                    HttpContext.Session.SetString("UserRole", "Admin");
                     return RedirectToAction("Index", "Home");
                 }
                 else if (hastaUser != null)
@@ -57,7 +52,7 @@ namespace Controllers
                     {
                         HttpContext.Session.SetString("Username", hastaUser.HastaAd);
                         HttpContext.Session.SetString("LoginName", hastaUser.HastaTc);
-                        HttpContext.Session.SetString("UserRole", "Hasta"); // Örnek bir rol ataması
+                        HttpContext.Session.SetString("UserRole", "Hasta");
                         return RedirectToAction("Index", "Home");
                     }
                 }
@@ -65,10 +60,9 @@ namespace Controllers
                 {
                     HttpContext.Session.SetString("Username", doktorUser.DoktorAd);
                     HttpContext.Session.SetString("LoginName", doktorUser.DoktorTc);
-                    HttpContext.Session.SetString("UserRole", "Doktor"); // Örnek bir rol ataması
+                    HttpContext.Session.SetString("UserRole", "Doktor");
                     return RedirectToAction("Index", "Home");
                 }
-                // Kullanıcı adı veya şifre hatalıysa
                 ModelState.AddModelError("", "Kullanıcı adı veya şifre hatalı.");
             }
 
@@ -85,47 +79,31 @@ namespace Controllers
             if (ModelState.IsValid)
             {
 
-                if (model.HastaEposta == "g211210028@sakarya.edu.tr")
+                if (model.HastaEposta == "g211210028@sakarya.edu.tr" || model.HastaEposta == "g211210085@sakarya.edu.tr")
                 {
-                    // Admin olarak kaydet
-                    // var existingUser = await db.Adminler.FirstOrDefaultAsync(h => h.KullaniciAdi == model.HastaEposta);
-                    // if (existingUser != null)
-                    // {
-                    //     // Aynı e-posta ile kayıtlı bir kullanıcı varsa, uygun bir hata mesajıyla geri dön
-                    //     ModelState.AddModelError(string.Empty, "Bu e-posta adresi zaten kullanılmaktadır.");
-                    //     return View(model);
-                    // }
+                    var existingUser = await db.Adminler.FirstOrDefaultAsync(h => h.KullaniciAdi == model.HastaEposta);
+                    if (existingUser != null)
+                    {
+                        ModelState.AddModelError(string.Empty, "Bu e-posta adresi zaten kullanılmaktadır.");
+                        return View(model);
+                    }
                     var admin = new Admin
                     {
-                        KullaniciAdi = model.HastaEposta, // Kullanıcı adı olarak adı kullanabilirsiniz
-                        Sifre = "sau", // Şifre varsayılan olarak "sau"
-                        Rol = "Admin" // Admin rolünü ata
+                        KullaniciAdi = model.HastaEposta,
+                        Sifre = "sau",
+                        Rol = "Admin"
 
-                        // Diğer gereken alanlar...
                     };
-                    // var claims = new List<Claim>
-                    // {
-                    // new Claim(ClaimTypes.Role, "Admin"), // veya "Doktor", "Admin" gibi kullanıcının rolü.
-                    //  };
-                    // var claimsIdentity = new ClaimsIdentity(
-                    // claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    // var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-                    // // Kullanıcıyı oturum açtır.
-                    // await HttpContext.SignInAsync(
-                    //     CookieAuthenticationDefaults.AuthenticationScheme,
-                    //     claimsPrincipal);
                     db.Adminler.Add(admin);
                 }
                 else
                 {
-                    // var existingUser = await db.Hastalar.FirstOrDefaultAsync(h => h.HastaTc == model.HastaTc);
-                    // if (existingUser != null)
-                    // {
-                    //     // Aynı e-posta ile kayıtlı bir kullanıcı varsa, uygun bir hata mesajıyla geri dön
-                    //     ModelState.AddModelError(string.Empty, "Bu TCN kullanılmaktadır.");
-                    //     return View(model);
-                    // }
+                    var existingUser = await db.Hastalar.FirstOrDefaultAsync(h => h.HastaTc == model.HastaTc);
+                    if (existingUser != null)
+                    {
+                        ModelState.AddModelError(string.Empty, "Bu TCN zaten kullanılmaktadır.");
+                        return View(model);
+                    }
                     var hasta = new Hasta
                     {
                         HastaTc = model.HastaTc,
@@ -137,31 +115,17 @@ namespace Controllers
                         HastaSifre = model.Password,
                         Rol = "Hasta"
                     };
-                    var claims = new List<Claim>
-                    {
-                    new Claim(ClaimTypes.Role, "Hasta"), // veya "Doktor", "Admin" gibi kullanıcının rolü.
-                    };
-                    var claimsIdentity = new ClaimsIdentity(
-                    claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                    // Kullanıcıyı oturum açtır.
-                    await HttpContext.SignInAsync(
-                        CookieAuthenticationDefaults.AuthenticationScheme,
-                        claimsPrincipal);
-
-                    // Hasta entity'sini veritabanına ekle
                     db.Hastalar.Add(hasta);
                 }
-                // ViewModel verilerini Hasta entity'sine dönüştür
 
-                await db.SaveChangesAsync(); // Değişiklikleri kaydet
 
-                // Başarılı kayıttan sonra kullanıcıyı başka bir sayfaya yönlendir
+                await db.SaveChangesAsync();
+
+
                 return RedirectToAction("Index", "Home");
             }
 
-            // Eğer model geçersizse, formu tekrar göster
             return View(model);
         }
         public ActionResult Register()
@@ -171,13 +135,11 @@ namespace Controllers
 
         public async Task<IActionResult> Logout()
         {
-            // Oturum bilgilerini temizle
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-            // Herhangi bir ekstra oturum bilgisi varsa, bu da temizlenebilir.
             HttpContext.Session.Clear();
 
-            // Anasayfaya yönlendir
+
             return RedirectToAction("Index", "Home");
         }
     }

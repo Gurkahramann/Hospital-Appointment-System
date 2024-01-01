@@ -12,7 +12,7 @@ ViewData["UserRole"] = userRole;
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - AspWebProgram</title>
+    <title>@_localization.GetKey("Hastane Randevu Sistemi")</title>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -25,7 +25,7 @@ ViewData["UserRole"] = userRole;
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AspWebProgram</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">@_localization.GetKey("Hastane Randevu Sistemi")</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -57,7 +57,7 @@ ViewData["UserRole"] = userRole;
                         {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Doktor"
-                                asp-action="Index">@_localization.GetKey("Doktorları Listele")</a>
+                                asp-action="Index">@_localization.GetKey("Profil Ayarları")</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Randevu"
@@ -94,18 +94,7 @@ ViewData["UserRole"] = userRole;
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Doktor" asp-action="Register">@_localization.GetKey("Doktor Ekle")</a>
                             </li> 
                         }
-
                         }
-                        <!-- <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Randevu" asp-action="IndexRandevu">@_localization.GetKey("Randevu Listele")</a>
-                        </li> -->
-                        <!-- <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Randevu" asp-action="RandevuOlustur">@_localization.GetKey("Randevu Oluştur")</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Doktor" asp-action="Register">@_localization.GetKey("Doktor Ekle")</a>
-                        </li> -->
-
                         @if (!isLoggedIn)
                         {
                         <li class="nav-item">
@@ -122,10 +111,6 @@ ViewData["UserRole"] = userRole;
                         </li>
 
                         }
-                        <!-- <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Hasta"
-                                asp-action="Index">@_localization.GetKey("Hastaları Listele")</a>
-                        </li> -->
                         @if (!string.IsNullOrEmpty(username))
                         {
                         <li class="nav-item">
@@ -168,7 +153,7 @@ ViewData["UserRole"] = userRole;
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - AspWebProgram - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2023-2024- @_localization.GetKey("Hastane Randevu Sistemi")
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -188,19 +173,14 @@ ViewData["UserRole"] = userRole;
 @RenderSection("Scripts", required: false)
 <script>
     $(document).ready(function () {
-        // Dil seçimi için event handler tanımla
         $('.dropdown-menu .dropdown-item').on('click', function () {
             var selectedLanguage = $(this).text();
-            // Buton metnini seçilen dil ile güncelle
             $('.dropdown-toggle').text(selectedLanguage);
-            // Seçimi localStorage'a kaydet
             localStorage.setItem('selectedLanguage', selectedLanguage);
         });
 
-        // Sayfa yüklendiğinde, daha önce seçilmiş dili kontrol et
         var savedLanguage = localStorage.getItem('selectedLanguage');
         if (savedLanguage) {
-            // Kaydedilmiş dil varsa buton metnini güncelle
             $('.dropdown-toggle').text(savedLanguage);
         }
     });

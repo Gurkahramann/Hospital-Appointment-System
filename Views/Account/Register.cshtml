@@ -1,9 +1,7 @@
 @model AspWebProgram.Models.RegisterViewModel
 
-@{
-    <!-- ViewData["Title"] = "Kayıt Ol"; -->
-}
 
+<link href="~/css/accountcss/register.css" rel="stylesheet" />
 <form asp-controller="Account" asp-action="Register" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 

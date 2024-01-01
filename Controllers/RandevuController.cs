@@ -22,14 +22,16 @@ namespace Controllers
         {
             var userRole = HttpContext.Session.GetString("UserRole");
             var loginName = HttpContext.Session.GetString("LoginName");
-
+           if (userRole != "Admin" && userRole != "Hasta" &&userRole!="Doktor")
+            {
+                return Unauthorized();
+            }
             IQueryable<Randevu> query = dbcontext.Randevular
                 .Include(x => x.Doktor)
                 .Include(x => x.Hasta);
 
             if (userRole == "Hasta")
             {
-                // Eğer kullanıcı "Hasta" ise, yalnızca o kullanıcının randevularını getir
                 query = query.Where(x => x.Hasta.HastaTc == loginName);
             }
             else if (userRole == "Doktor")
@@ -40,22 +42,17 @@ namespace Controllers
             var randevular = await query.ToListAsync();
             return View(randevular);
         }
-        // public async Task<IActionResult> IndexRandevu()
-        // {
-        //     var userRole = HttpContext.Session.GetString("UserRole");
-        //     var loginName = HttpContext.Session.GetString("LoginName");
-        //     var randevular = await dbcontext.Randevular
-        //     .Include(x => x.Doktor)
-        //     .Include(x => x.Hasta)
-        //     .ToListAsync();
-        //     return View(randevular);
-        // }
+
         [HttpGet]
         public async Task<IActionResult> RandevuOlustur()
         {
             var userRole = HttpContext.Session.GetString("UserRole");
             var loginName = HttpContext.Session.GetString("LoginName");
-
+            ViewBag.Hastalar = new SelectList(await dbcontext.Hastalar.ToListAsync(), "HastaId", "HastaAd");
+            if (userRole != "Admin" && userRole != "Hasta")
+            {
+                return Unauthorized();
+            }
             if (userRole == "Hasta")
             {
                 var hasta = await dbcontext.Hastalar.FirstOrDefaultAsync(h => h.HastaTc == loginName);
@@ -65,7 +62,7 @@ namespace Controllers
 
                 }
             }
-            else
+            else if(userRole=="Admin")
             {
                 ViewBag.Hastalar = new SelectList(await dbcontext.Hastalar.ToListAsync(), "HastaId", "HastaAd");
             }
@@ -144,39 +141,12 @@ namespace Controllers
             return saatler;
         }
 
-        // private async Task<List<SelectListItem>> GetRandevuSaatleri(DateTime? secilenTarih)
-        // {
-        //     var mevcutRandevular = new HashSet<TimeSpan>();
 
-        //     if (secilenTarih.HasValue)
-        //     {
-        //         var randevuTarihleri = await dbcontext.Randevular
-        //             .Where(r => r.RandevuTarih.Date == secilenTarih.Value.Date)
-        //             .Select(r => r.RandevuTarih.TimeOfDay)
-        //             .ToListAsync();
-
-        //         mevcutRandevular = new HashSet<TimeSpan>(randevuTarihleri);
-        //     }
-
-        //     var saatler = new List<SelectListItem>();
-        //     var baslangic = new TimeSpan(9, 0, 0); // Sabah 9:00
-        //     var bitis = new TimeSpan(17, 0, 0);    // Akşam 5:00
-
-        //     for (var saat = baslangic; saat < bitis; saat = saat.Add(TimeSpan.FromMinutes(30)))
-        //     {
-        //         if (!mevcutRandevular.Contains(saat))
-        //         {
-        //             saatler.Add(new SelectListItem { Value = saat.ToString(), Text = saat.ToString(@"hh\:mm") });
-        //         }
-        //     }
-
-        //     return saatler;
-        // }
         [HttpPost]
         public async Task<IActionResult> RandevuOlustur(Randevu model)
         {
             var userRole = HttpContext.Session.GetString("UserRole");
-            if (userRole != "Admin" || userRole != "Hasta")
+            if (userRole != "Admin" && userRole != "Hasta")
             {
                 return Unauthorized();
             }
@@ -184,33 +154,12 @@ namespace Controllers
             await dbcontext.SaveChangesAsync();
             return RedirectToAction("Index", "Home");
         }
-        // [HttpGet]
-        // public IActionResult Edit(int id)
-        // {
-        //     var randevu = dbcontext.Randevular.SingleOrDefault(r => r.RandevuId == id);
-        //     if (randevu == null)
-        //     {
-        //         return NotFound();
-        //     }
 
-        //     var viewModel = new RandevuEditViewModel
-        //     {
-        //         RandevuId = randevu.RandevuId,
-        //         HastaId = randevu.HastaId,
-        //         DoktorId = randevu.DoktorId,
-        //         RandevuTarih = randevu.RandevuTarih,
-        //         RandevuSaati = randevu.RandevuSaati
-        //     };
-
-        //     ViewBag.Hastalar = new SelectList(dbcontext.Hastalar, "HastaId", "HastaAd", randevu.HastaId);
-        //     ViewBag.Doktorlar = new SelectList(dbcontext.Doktorlar, "DoktorId", "DoktorAd", randevu.DoktorId);
-        //     return View(viewModel);
-        // }
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var userRole = HttpContext.Session.GetString("UserRole");
-            if (userRole != "Admin" || userRole != "Hasta")
+            if (userRole != "Admin" && userRole != "Hasta")
             {
                 return Unauthorized();
             }
@@ -230,6 +179,9 @@ namespace Controllers
 
                 }
             }
+            else{
+                ViewBag.Hastalar = new SelectList(dbcontext.Hastalar, "HastaId", "HastaAd", randevu.HastaId);
+            }
             if (randevu == null)
             {
                 return NotFound();
@@ -244,7 +196,6 @@ namespace Controllers
                 RandevuSaati = randevu.RandevuSaati
             };
 
-            //ViewBag.Hastalar = new SelectList(dbcontext.Hastalar, "HastaId", "HastaAd", randevu.HastaId);
             ViewBag.Doktorlar = new SelectList(dbcontext.Doktorlar, "DoktorId", "DoktorAd", randevu.DoktorId);
             ViewBag.RandevuSaatleri = await GetRandevuSaatleriEdit(randevu.RandevuTarih, randevu.RandevuId);
 
@@ -254,7 +205,7 @@ namespace Controllers
         public IActionResult Edit(int id, RandevuEditViewModel viewModel)
         {
             var userRole = HttpContext.Session.GetString("UserRole");
-            if (userRole != "Admin" || userRole != "Hasta")
+            if (userRole != "Admin" && userRole != "Hasta")
             {
                 return Unauthorized();
             }
@@ -288,7 +239,7 @@ namespace Controllers
         public IActionResult Delete(int id)
         {
             var userRole = HttpContext.Session.GetString("UserRole");
-            if (userRole != "Admin" || userRole != "Hasta")
+           if (userRole != "Admin" && userRole != "Hasta")
             {
                 return Unauthorized();
             }

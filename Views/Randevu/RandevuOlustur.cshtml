@@ -1,9 +1,6 @@
 @model AspWebProgramming.Data.Randevu
 
-@{
-    ViewData["Title"] = "Randevu Oluştur";
-}
-
+<link href="~/css/randevucss/randevuolustur.css" rel="stylesheet" />
 <hr>
 <form asp-controller="Randevu" asp-action="RandevuOlustur" method="post">
     <div class="mb3">
@@ -40,7 +37,6 @@
         var saatSecinizText = '@_localization.GetKey("Saat Seçiniz")';
         var hataMesajiText = '@_localization.GetKey("Saatler yüklenirken bir hata oluştu.")';
 
-        // Doktor veya tarih değiştiğinde saatleri güncelle
         function updateRandevuSaatleri() {
             var secilenTarih = $('#RandevuTarih').val();
             var doktorId = $('#DoktorId').val();
@@ -69,38 +65,3 @@
         $('#RandevuTarih, #DoktorId').change(updateRandevuSaatleri);
     });
 </script>
-
-<!-- <script>
-    $(document).ready(function () {
-        var getRandevuSaatleriUrl = '@Url.Action("GetRandevuSaatleriJson", "Randevu")';
-        
-        // Doktor veya tarih değiştiğinde saatleri güncelle
-        function updateRandevuSaatleri() {
-            var secilenTarih = $('#RandevuTarih').val();
-            var doktorId = $('#DoktorId').val();
-            if (!secilenTarih || !doktorId) {
-                $('#RandevuSaati').empty().append('<option value="">Saat Seçiniz</option>');
-                return;
-            }
-            
-            $.ajax({
-                url: getRandevuSaatleriUrl,
-                type: 'GET',
-                data: { secilenTarih: secilenTarih, doktorId: doktorId },
-                success: function (data) {
-                    var randevuSaatiSelect = $('#RandevuSaati');
-                    randevuSaatiSelect.empty().append('<option value="">Saat Seçiniz</option>');
-                    $.each(data, function (index, item) {
-                        randevuSaatiSelect.append($('<option></option>').val(item.value).text(item.text));
-                    });
-                },
-                error: function () {
-                    alert('Saatler yüklenirken bir hata oluştu.');
-                }
-            });
-        }
-
-        $('#RandevuTarih, #DoktorId').change(updateRandevuSaatleri);
-    });
-</script> -->
-

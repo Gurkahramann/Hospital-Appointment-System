@@ -1,10 +1,18 @@
 @model IEnumerable<AspWebProgramming.Data.Doktor>
 
     @{
-    ViewData["Title"] = "Doktorlar Listesi";
+        if (ViewData["UserRole"] as string == "Doktor" )
+        {
+            ViewData["Title"] = "Profil Ayarları";
+        }
+        else
+        {
+            ViewData["Title"] = "Doktorlar Listesi";
+        }
+    
     }
-
-    <h2>@_localization.GetKey("Doktorlar Listesi")</h2>
+    <link href="~/css/doktorcss/doktorindex.css" rel="stylesheet" />
+    <h2>@_localization.GetKey(ViewData["Title"] as string)</h2>
 
     <table class="table">
         <thead>
@@ -35,9 +43,13 @@
                     {
                     <a asp-controller="Doktor" asp-action="Edit" asp-route-id="@doktor.DoktorId"
                         class="btn btn-primary">@_localization.GetKey("Düzenle")</a>
-                    <a class="btn btn-danger" href="javascript:void(0)"
-                        onclick="confirmDelete('@doktor.DoktorId')">@_localization.GetKey("Sil")</a>
+                        @if(ViewData["UserRole"] as string == "Admin")
+                        {
+                            <a class="btn btn-danger" href="javascript:void(0)"
+                            onclick="confirmDelete('@doktor.DoktorId')">@_localization.GetKey("Sil")</a>
+                        }
                     }
+
 
                 </td>
             </tr>

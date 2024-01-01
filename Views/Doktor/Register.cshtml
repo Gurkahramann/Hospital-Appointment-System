@@ -3,7 +3,7 @@
 @{
 ViewData["Title"] = "Doktor Kayıt";
 }
-
+<link href="~/css/doktorcss/doktorregister.css" rel="stylesheet" />
 <form method="post" asp-controller="Doktor" asp-action="Register">
     <div class="form-group">
         <label asp-for="DoktorAd">@_localization.GetKey("Adı"):</label>
@@ -86,24 +86,21 @@ ViewData["Title"] = "Doktor Kayıt";
         var kardiyolojiText = '@_localization.GetKey("Kardiyoloji")';
         var radyolojiText = '@_localization.GetKey("Radyoloji")';
         var beyinVeSinirCerrahisiText = '@_localization.GetKey("Beyin ve Sinir Cerrahisi")';
-        // Temel Tıp, Dahili Tıp, ve Cerrahi Tıp metinleri de benzer şekilde tanımlanmalı.
 
         $("#SelectedAnaBilimId").change(function () {
             var selectedAnaBilim = $(this).val();
             var poliklinikDropdown = $("#SelectedPoliklinikId");
-            // Poliklinikleri sıfırla
             poliklinikDropdown.empty();
 
-            // Temel Tıp seçildiğinde
             if (selectedAnaBilim === "Temel Tıp") {
                 poliklinikDropdown.append($('<option>', { value: "Anatomi", text: anatomiText }));
                 poliklinikDropdown.append($('<option>', { value: "Fizyoloji", text: fizyolojiText }));
                 poliklinikDropdown.append($('<option>', { value: "Histoloji", text: histolojiText }));
-            } else if (selectedAnaBilim === "Dahili Tıp") { // Dahili Tıp seçildiğinde
+            } else if (selectedAnaBilim === "Dahili Tıp") { 
                 poliklinikDropdown.append($('<option>', { value: "Acil Tıp", text: acilTipText }));
                 poliklinikDropdown.append($('<option>', { value: "Kardiyoloji", text: kardiyolojiText }));
                 poliklinikDropdown.append($('<option>', { value: "Radyoloji", text: radyolojiText }));
-            } else if (selectedAnaBilim === "Cerrahi Tıp") { // Cerrahi Tıp seçildiğinde
+            } else if (selectedAnaBilim === "Cerrahi Tıp") { 
                 poliklinikDropdown.append($('<option>', { value: "Beyin ve Sinir Cerrahisi", text: beyinVeSinirCerrahisiText }));
             }
         });

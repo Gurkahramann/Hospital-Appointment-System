@@ -15,10 +15,12 @@ public class HastaController : Controller
     {
         var userRole = HttpContext.Session.GetString("UserRole");
         var loginName = HttpContext.Session.GetString("LoginName");
-
+        if(userRole!="Hasta" && userRole!="Doktor" && userRole!="Admin" )
+        {
+             return Unauthorized();
+        }
         if (userRole == "Hasta")
         {
-            // Sadece giriş yapan hasta kullanıcısının bilgilerini getir
             var hastalar = await _context.Hastalar
                 .Where(h => h.HastaTc == loginName)
                 .ToListAsync();
@@ -26,47 +28,28 @@ public class HastaController : Controller
         }
         else if (userRole == "Doktor")
         {
-            // Sadece giriş yapan doktordan randevu alan hastaların bilgilerini getir
             var hastalar = await _context.Randevular
-                .Include(r => r.Hasta) // Randevu ile ilişkili Hasta bilgilerini içer
+                .Include(r => r.Hasta) 
                 .Where(r => r.Doktor.DoktorTc == loginName)
                 .Select(r => r.Hasta)
-                .Distinct() // Aynı hastanın birden fazla randevusu varsa, hastayı bir kere listele
+                .Distinct() 
                 .ToListAsync();
             return View(hastalar);
         }
         else
         {
-            // Diğer roller için tüm hastaları getir
             var hastalar = await _context.Hastalar.ToListAsync();
             return View(hastalar);
         }
     }
 
-    // public IActionResult Index()
-    // {
-    //     var userRole = HttpContext.Session.GetString("UserRole");
-    //     var loginName = HttpContext.Session.GetString("LoginName");
 
-    // List<Hasta> hastalar;
-    // if (userRole == "Hasta")
-    // {
-    //     // Sadece giriş yapan hasta kullanıcısının bilgilerini getir
-    //      hastalar = _context.Hastalar.Where(h => h.HastaTc == loginName).ToList();
-    // }
-    // else
-    // {
-    //     // Diğer roller için tüm hastaları getir
-    //     hastalar = _context.Hastalar.ToList();
-    // }
-    // return View(hastalar);
-    // }
 
     [HttpGet]
     public IActionResult Edit(int id)
     {
         var userRole = HttpContext.Session.GetString("UserRole");
-        if (userRole != "Admin" || userRole != "Hasta")
+        if (userRole != "Admin" && userRole != "Hasta")
         {
             return Unauthorized();
         }
@@ -81,7 +64,7 @@ public class HastaController : Controller
     public IActionResult Edit(int id, Hasta hasta)
     {
         var userRole = HttpContext.Session.GetString("UserRole");
-        if (userRole != "Admin" || userRole != "Hasta")
+        if (userRole != "Admin" && userRole != "Hasta")
         {
             return Unauthorized();
         }

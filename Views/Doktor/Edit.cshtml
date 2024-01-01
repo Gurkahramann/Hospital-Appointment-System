@@ -4,7 +4,7 @@
     ViewData["Title"] = "Doktor Düzenle";
 }
 
-
+<link href="~/css/doktorcss/doktoredit.css" rel="stylesheet" />
 
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="DoktorId" />
@@ -20,8 +20,6 @@
         <input asp-for="DoktorSoyad" class="form-control" />
         <span asp-validation-for="DoktorSoyad" class="text-danger"></span>
     </div>
-
-    <!-- Diğer alanlarınızı burada ekleyin. Örneğin: -->
     <div class="form-group">
         <label asp-for="DoktorTc">@_localization.GetKey("TC Kimlik Numarası"):</label>
         <input asp-for="DoktorTc" class="form-control" />
@@ -81,58 +79,22 @@
 
         $("#DoktorAnaBilim").change(function () {
             var selectedAnaBilim = $(this).val();
-            var poliklinikDropdown = $("#DoktorPoliklinik"); // ID burada düzeltilmiştir
-            // Poliklinikleri sıfırla
+            var poliklinikDropdown = $("#DoktorPoliklinik"); 
             poliklinikDropdown.empty();
 
-            // Temel Tıp seçildiğinde
             if (selectedAnaBilim === "Temel Tıp") {
                 poliklinikDropdown.append($('<option>', { value: "Anatomi", text: anatomiText }));
                 poliklinikDropdown.append($('<option>', { value: "Fizyoloji", text: fizyolojiText }));
                 poliklinikDropdown.append($('<option>', { value: "Histoloji", text: histolojiText }));
-            } else if (selectedAnaBilim === "Dahili Tıp") { // Dahili Tıp seçildiğinde
+            } else if (selectedAnaBilim === "Dahili Tıp") { 
                 poliklinikDropdown.append($('<option>', { value: "Acil Tıp", text: acilTipText }));
                 poliklinikDropdown.append($('<option>', { value: "Kardiyoloji", text: kardiyolojiText }));
                 poliklinikDropdown.append($('<option>', { value: "Radyoloji", text: radyolojiText }));
-            } else if (selectedAnaBilim === "Cerrahi Tıp") { // Cerrahi Tıp seçildiğinde
+            } else if (selectedAnaBilim === "Cerrahi Tıp") { 
                 poliklinikDropdown.append($('<option>', { value: "Beyin ve Sinir Cerrahisi", text: beyinVeSinirCerrahisiText }));
             }
         });
 
-        // Doktor edit sayfası yüklendiğinde mevcut Ana Bilim dalına göre Poliklinik dropdown'ını başlat
         $("#DoktorAnaBilim").trigger("change");
     });
 </script>
-
-<!-- <script>
-    $(function () {
-        var anatomiText = '@_localization.GetKey("Anatomi")';
-        var fizyolojiText = '@_localization.GetKey("Fizyoloji")';
-        var histolojiText = '@_localization.GetKey("Histoloji")';
-        var acilTipText = '@_localization.GetKey("Acil")';
-        var kardiyolojiText = '@_localization.GetKey("Kardiyoloji")';
-        var radyolojiText = '@_localization.GetKey("Radyoloji")';
-        var beyinVeSinirCerrahisiText = '@_localization.GetKey("Beyin ve Sinir Cerrahisi")';
-        // Temel Tıp, Dahili Tıp, ve Cerrahi Tıp metinleri de benzer şekilde tanımlanmalı.
-
-        $("#SelectedAnaBilimId").change(function () {
-            var selectedAnaBilim = $(this).val();
-            var poliklinikDropdown = $("#SelectedPoliklinikId");
-            // Poliklinikleri sıfırla
-            poliklinikDropdown.empty();
-
-            // Temel Tıp seçildiğinde
-            if (selectedAnaBilim === "Temel Tıp") {
-                poliklinikDropdown.append($('<option>', { value: "Anatomi", text: anatomiText }));
-                poliklinikDropdown.append($('<option>', { value: "Fizyoloji", text: fizyolojiText }));
-                poliklinikDropdown.append($('<option>', { value: "Histoloji", text: histolojiText }));
-            } else if (selectedAnaBilim === "Dahili Tıp") { // Dahili Tıp seçildiğinde
-                poliklinikDropdown.append($('<option>', { value: "Acil Tıp", text: acilTipText }));
-                poliklinikDropdown.append($('<option>', { value: "Kardiyoloji", text: kardiyolojiText }));
-                poliklinikDropdown.append($('<option>', { value: "Radyoloji", text: radyolojiText }));
-            } else if (selectedAnaBilim === "Cerrahi Tıp") { // Cerrahi Tıp seçildiğinde
-                poliklinikDropdown.append($('<option>', { value: "Beyin ve Sinir Cerrahisi", text: beyinVeSinirCerrahisiText }));
-            }
-        });
-    });
-</script> -->

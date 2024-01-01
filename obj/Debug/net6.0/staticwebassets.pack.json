@@ -5,6 +5,50 @@
       "PackagePath": "staticwebassets\\AspWebProgram.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\gurka\\OneDrive\\Masaüstü\\AspWebProgram\\wwwroot\\css\\accountcss\\login.css",
+      "PackagePath": "staticwebassets\\css\\accountcss\\login.css"
+    },
+    {
+      "Id": "C:\\Users\\gurka\\OneDrive\\Masaüstü\\AspWebProgram\\wwwroot\\css\\accountcss\\register.css",
+      "PackagePath": "staticwebassets\\css\\accountcss\\register.css"
+    },
+    {
+      "Id": "C:\\Users\\gurka\\OneDrive\\Masaüstü\\AspWebProgram\\wwwroot\\css\\doktorcss\\doktoredit.css",
+      "PackagePath": "staticwebassets\\css\\doktorcss\\doktoredit.css"
+    },
+    {
+      "Id": "C:\\Users\\gurka\\OneDrive\\Masaüstü\\AspWebProgram\\wwwroot\\css\\doktorcss\\doktorindex.css",
+      "PackagePath": "staticwebassets\\css\\doktorcss\\doktorindex.css"
+    },
+    {
+      "Id": "C:\\Users\\gurka\\OneDrive\\Masaüstü\\AspWebProgram\\wwwroot\\css\\doktorcss\\doktorregister.css",
+      "PackagePath": "staticwebassets\\css\\doktorcss\\doktorregister.css"
+    },
+    {
+      "Id": "C:\\Users\\gurka\\OneDrive\\Masaüstü\\AspWebProgram\\wwwroot\\css\\hastacss\\hastaedit.css",
+      "PackagePath": "staticwebassets\\css\\hastacss\\hastaedit.css"
+    },
+    {
+      "Id": "C:\\Users\\gurka\\OneDrive\\Masaüstü\\AspWebProgram\\wwwroot\\css\\hastacss\\hastaindex.css",
+      "PackagePath": "staticwebassets\\css\\hastacss\\hastaindex.css"
+    },
+    {
+      "Id": "C:\\Users\\gurka\\OneDrive\\Masaüstü\\AspWebProgram\\wwwroot\\css\\homeindex.css",
+      "PackagePath": "staticwebassets\\css\\homeindex.css"
+    },
+    {
+      "Id": "C:\\Users\\gurka\\OneDrive\\Masaüstü\\AspWebProgram\\wwwroot\\css\\randevucss\\randevuedit.css",
+      "PackagePath": "staticwebassets\\css\\randevucss\\randevuedit.css"
+    },
+    {
+      "Id": "C:\\Users\\gurka\\OneDrive\\Masaüstü\\AspWebProgram\\wwwroot\\css\\randevucss\\randevuindex.css",
+      "PackagePath": "staticwebassets\\css\\randevucss\\randevuindex.css"
+    },
+    {
+      "Id": "C:\\Users\\gurka\\OneDrive\\Masaüstü\\AspWebProgram\\wwwroot\\css\\randevucss\\randevuolustur.css",
+      "PackagePath": "staticwebassets\\css\\randevucss\\randevuolustur.css"
+    },
+    {
       "Id": "C:\\Users\\gurka\\OneDrive\\Masaüstü\\AspWebProgram\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
