@@ -3,6 +3,17 @@
 @{
     <!-- ViewData["Title"] = "Kayıt Ol"; -->
 }
+@if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+{
+    <div class="alert alert-danger">
+        <ul>
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(modelState => modelState.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
 <link href="~/css/accountcss/register.css" rel="stylesheet" />
 <form asp-controller="Account" asp-action="Register" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
