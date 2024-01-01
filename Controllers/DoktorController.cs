@@ -111,6 +111,11 @@ namespace Controllers
             }
             if (ModelState.IsValid)
             {
+                if (string.IsNullOrEmpty(doktor.DoktorSifre))
+                {
+                    ModelState.AddModelError("DoktorSifre", "Şifre alanı boş bırakılamaz.");
+                    return View(doktor);
+                }
                 doktor.Rol = "Doktor";
                 db.Update(doktor);
                 db.SaveChanges();
