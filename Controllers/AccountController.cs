@@ -43,9 +43,15 @@ namespace Controllers
                 if (adminUser != null)
                 {
                     HttpContext.Session.SetString("Username", adminUser.KullaniciAdi);
-                    HttpContext.Session.SetString("UserRole", "Admin");
+                    HttpContext.Session.SetString("UserRole", "Admin"); // Örnek bir rol ataması
+                    var claims = new List<Claim>
+                {
+                new Claim(ClaimTypes.Name, model.Username),
+                new Claim(ClaimTypes.Role,"Admin")
+                };
                     return RedirectToAction("Index", "Home");
                 }
+
                 else if (hastaUser != null)
                 {
                     if (hastaUser != null)
@@ -115,7 +121,18 @@ namespace Controllers
                         HastaSifre = model.Password,
                         Rol = "Hasta"
                     };
+                    var claims = new List<Claim>
+                    {
+                    new Claim(ClaimTypes.Role, "Hasta"), // veya "Doktor", "Admin" gibi kullanıcının rolü.
+                    };
+                    var claimsIdentity = new ClaimsIdentity(
+                    claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
+                    // Kullanıcıyı oturum açtır.
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        claimsPrincipal);
                     db.Hastalar.Add(hasta);
                 }
 
