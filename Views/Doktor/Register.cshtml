@@ -3,6 +3,17 @@
 @{
 ViewData["Title"] = "Doktor Kayıt";
 }
+@if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+{
+    <div class="alert alert-danger">
+        <ul>
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(modelState => modelState.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
 <link href="~/css/doktorcss/doktorregister.css" rel="stylesheet" />
 <form method="post" asp-controller="Doktor" asp-action="Register">
     <div class="form-group">
