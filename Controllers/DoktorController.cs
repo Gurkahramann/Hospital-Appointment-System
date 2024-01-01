@@ -53,6 +53,17 @@ namespace Controllers
                     DoktorPoliklinik = model.SelectedPoliklinikId.ToString(),
                     Rol = "Doktor"
                 };
+                  var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Role, "Doktor"), 
+                 };
+                var claimsIdentity = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    claimsPrincipal);
                 var anaBilim = new AnaBilim()
                 {
                     AnaBilimAd = model.SelectedAnaBilimId
