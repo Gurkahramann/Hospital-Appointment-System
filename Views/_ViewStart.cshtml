@@ -1,0 +1,11 @@
+﻿@{
+    Layout = "_Layout";
+}
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+var username = HttpContextAccessor.HttpContext.Session.GetString("Username");
+bool isLoggedIn = !string.IsNullOrEmpty(username);
+var userRole = HttpContextAccessor.HttpContext.Session.GetString("UserRole");
+ViewData["UserRole"] = userRole;
+}
