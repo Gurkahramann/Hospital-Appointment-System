@@ -1,0 +1,105 @@
+@model AspWebProgramming.Data.Randevu
+
+@{
+    ViewData["Title"] = "Randevu Oluştur";
+}
+<link href="~/css/randevucss/randevuolustur.css" rel="stylesheet" />
+<hr>
+<form asp-controller="Randevu" asp-action="RandevuOlustur" method="post">
+    <div class="mb3">
+        <label asp-for="HastaId" class="form-label">@_localization.GetKey("Hasta Seçiniz")</label>
+        <select asp-for="HastaId" asp-items="ViewBag.Hastalar" class="form-control">
+            <option value=""></option>
+        </select>
+    </div>
+
+    <div class="mb3">
+        <label asp-for="DoktorId" class="form-label">@_localization.GetKey("Doktor Seçiniz")</label>
+        <select asp-for="DoktorId" asp-items="ViewBag.Doktorlar" class="form-control">
+            <option value=""></option>
+        </select>
+    </div>
+
+    <div class="mb3">
+        <label asp-for="RandevuTarih" class="form-label">@_localization.GetKey("Randevu Tarihi Seçiniz")</label>
+        <input asp-for="RandevuTarih" type="date" class="form-control" id="RandevuTarih">
+    </div>
+
+    <div class="mb3">
+        <label for="RandevuSaati" class="form-label">@_localization.GetKey("Randevu Saati Seçiniz")</label>
+        <select id="RandevuSaati" name="RandevuSaati" class="form-control">
+            <option value="">@_localization.GetKey("Saat Seçiniz")</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-secondary">@_localization.GetKey("Kaydet")</button>
+</form>
+<script>
+    $(document).ready(function () {
+        var getRandevuSaatleriUrl = '@Url.Action("GetRandevuSaatleriJson", "Randevu")';
+        var saatSecinizText = '@_localization.GetKey("Saat Seçiniz")';
+        var hataMesajiText = '@_localization.GetKey("Saatler yüklenirken bir hata oluştu.")';
+
+        function updateRandevuSaatleri() {
+            var secilenTarih = $('#RandevuTarih').val();
+            var doktorId = $('#DoktorId').val();
+            if (!secilenTarih || !doktorId) {
+                $('#RandevuSaati').empty().append('<option value="">' + saatSecinizText + '</option>');
+                return;
+            }
+            
+            $.ajax({
+                url: getRandevuSaatleriUrl,
+                type: 'GET',
+                data: { secilenTarih: secilenTarih, doktorId: doktorId },
+                success: function (data) {
+                    var randevuSaatiSelect = $('#RandevuSaati');
+                    randevuSaatiSelect.empty().append('<option value="">' + saatSecinizText + '</option>');
+                    $.each(data, function (index, item) {
+                        randevuSaatiSelect.append($('<option></option>').val(item.value).text(item.text));
+                    });
+                },
+                error: function () {
+                    alert(hataMesajiText);
+                }
+            });
+        }
+
+        $('#RandevuTarih, #DoktorId').change(updateRandevuSaatleri);
+    });
+</script>
+
+<!-- <script>
+    $(document).ready(function () {
+        var getRandevuSaatleriUrl = '@Url.Action("GetRandevuSaatleriJson", "Randevu")';
+        
+        // Doktor veya tarih değiştiğinde saatleri güncelle
+        function updateRandevuSaatleri() {
+            var secilenTarih = $('#RandevuTarih').val();
+            var doktorId = $('#DoktorId').val();
+            if (!secilenTarih || !doktorId) {
+                $('#RandevuSaati').empty().append('<option value="">Saat Seçiniz</option>');
+                return;
+            }
+            
+            $.ajax({
+                url: getRandevuSaatleriUrl,
+                type: 'GET',
+                data: { secilenTarih: secilenTarih, doktorId: doktorId },
+                success: function (data) {
+                    var randevuSaatiSelect = $('#RandevuSaati');
+                    randevuSaatiSelect.empty().append('<option value="">Saat Seçiniz</option>');
+                    $.each(data, function (index, item) {
+                        randevuSaatiSelect.append($('<option></option>').val(item.value).text(item.text));
+                    });
+                },
+                error: function () {
+                    alert('Saatler yüklenirken bir hata oluştu.');
+                }
+            });
+        }
+
+        $('#RandevuTarih, #DoktorId').change(updateRandevuSaatleri);
+    });
+</script> -->
+

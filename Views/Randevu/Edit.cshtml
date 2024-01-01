@@ -1,0 +1,43 @@
+@model AspWebProgram.Models.RandevuEditViewModel
+
+@{
+    ViewData["Title"] = "Randevu Düzenle";
+}
+<link href="~/css/randevucss/randevuedit.css" rel="stylesheet" />
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="RandevuId" />
+    
+    <div class="form-group">
+        <label asp-for="HastaId" class="control-label">@_localization.GetKey("Hasta Seçiniz"):</label>
+        <select asp-for="HastaId" asp-items="ViewBag.Hastalar" class="form-control">
+            <option value=""></option>
+        </select>
+        <span asp-validation-for="HastaId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DoktorId" class="control-label">@_localization.GetKey("Doktor Seçiniz"):</label>
+        <select asp-for="DoktorId" asp-items="ViewBag.Doktorlar" class="form-control">
+            <option value=""></option>
+        </select>
+        <span asp-validation-for="DoktorId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="RandevuTarih" class="form-label">@_localization.GetKey("Randevu Tarihi Seçiniz"):</label>
+        <input asp-for="RandevuTarih" type="date" class="form-control">
+    </div>
+    <div class="form-group">
+        <label class="form-label">@_localization.GetKey("Randevu Saati Seçiniz"):</label>
+        <select asp-for="RandevuSaati" asp-items="ViewBag.RandevuSaatleri" class="form-control">
+            <option value=""></option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">@_localization.GetKey("Kaydet")</button>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
